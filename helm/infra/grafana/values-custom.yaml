@@ -5,11 +5,11 @@ ingress:
   enabled: true
 
   hosts:
-    - grafana.tferrari.com # This value was modified by the initial-setup python script
+    - grafana.AATT_DOMAIN # This value was modified by the initial-setup python script
 
   annotations: 
     # External-DNS related annotations
-    external-dns.alpha.kubernetes.io/hostname: grafana.tferrari.com # This value was modified by the initial-setup python script
+    external-dns.alpha.kubernetes.io/hostname: grafana.AATT_DOMAIN # This value was modified by the initial-setup python script
 
     # ALB related annotations
     kubernetes.io/ingress.class: alb
@@ -25,7 +25,7 @@ ingress:
 
     # TLS related annotations
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:373421766055:certificate/d9b3107e-3882-4fff-b8b3-cf33f76daffb # This value was modified by the deploy-infra pipeline
+    alb.ingress.kubernetes.io/certificate-arn:  # This value was modified by the deploy-infra pipeline
 
   
 datasources:

@@ -1,4 +1,4 @@
-appName: gonchi # This value was modified by the initial-setup python script
+appName: AATT_APP_NAME # This value was modified by the initial-setup python script
 
 service: backend
 
@@ -9,5 +9,4 @@ deployment:
     istio: monitor # This label is used by the PodMonitor
   }
   image:
-    repository: harbor.tferrari.com/gonchi/backend # This value was modified by the initial-setup python script
-    # repository: tferrari92/gonchi-backend # This value was modified by the harbor-setup pipeline
+    repository: harbor.AATT_USER_EMAIL/AATT_APP_NAME/backend # This value was modified by the initial-setup python script

@@ -1,5 +1,5 @@
 domainFilters:
-  - tferrari.com # This value was modified by the initial-setup python script
+  - AATT_DOMAIN # This value was modified by the initial-setup python script
 
 policy: sync
 

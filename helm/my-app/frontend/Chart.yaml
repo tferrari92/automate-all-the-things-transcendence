@@ -1,4 +1,4 @@
 apiVersion: v1
-name: gonchi # This value was modified by the initial-setup python script
-description: A Helm chart for deploying gonchi-frontend. # This value was modified by the initial-setup python script
+name: AATT_APP_NAME # This value was modified by the initial-setup python script
+description: A Helm chart for deploying AATT_APP_NAME-frontend. # This value was modified by the initial-setup python script
 version: 1.0

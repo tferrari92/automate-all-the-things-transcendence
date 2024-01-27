@@ -1,6 +1,7 @@
 # Had to modify values.schema.json to incorporate these three values
-host: tferrari.com # This value was modified by the initial-setup python script
-email: tomas.ferrari@sendati.com # This value was modified by the initial-setup python script
+host: AATT_DOMAIN # This value was modified by the initial-setup python script
+email: AATT_USER_EMAIL # This value was modified by the initial-setup python script
+
 issuer: staging # Options are "staging" and "production"
 
 global:
@@ -8,5 +9,5 @@ global:
 
 service:
   annotations: 
-    external-dns.alpha.kubernetes.io/hostname: "tferrari.com,dev.tferrari.com,stage.tferrari.com" # This value was modified by the initial-setup python script
+    external-dns.alpha.kubernetes.io/hostname: "AATT_DOMAIN,dev.AATT_DOMAIN,stage.AATT_DOMAIN" # This value was modified by the initial-setup python script
   

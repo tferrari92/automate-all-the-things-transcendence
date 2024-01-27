@@ -1,8 +1,8 @@
-appName: gonchi # This value was modified by the initial-setup python script
+appName: AATT_APP_NAME # This value was modified by the initial-setup python script
 
 service: frontend
 
-host: tferrari.com # This value was modified by the initial-setup python script
+host: AATT_DOMAIN # This value was modified by the initial-setup python script
 
 containerPort: 80 # Port where the app in the container exposes the service
 
@@ -11,7 +11,7 @@ deployment:
     istio: monitor
   }
   image:
-    repository: harbor.tferrari.com/gonchi/frontend # This value was modified by the initial-setup python script
+    repository: harbor.AATT_DOMAIN/AATT_APP_NAME/frontend # This value was modified by the initial-setup python script
 
 
 configmap:

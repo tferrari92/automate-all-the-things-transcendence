@@ -2,11 +2,7 @@ environment: dev
 
 deployment:
   image:
-# BORRARRRRR
-    tag: 1488
-    # repository: harbor.tferrari.com/gonchi/gonchi-frontend # This value was modified by the harbor-setup pipeline
-    # repository: harbor.registry.svc.cluster.local/gonchi/gonchi-frontend # This value was modified by the harbor-setup pipeline
-    # tag: 1488
+    tag: 
   replicas: 1
 
 
@@ -27,7 +23,7 @@ configmap:
             proxy_http_version 1.1;
 
             # In other environments we use "AATT_APP_NAME-backend-dev-deployment" because this is the name that gets automatically assigned to the service by the Flagger canary. In this case we can choose the name, so we'll use "AATT_APP_NAME-backend-dev-service"
-            proxy_pass http://gonchi-backend-dev-service:3000/; # This value was modified by the initial-setup python script
+            proxy_pass http://AATT_APP_NAME-backend-dev-service:3000/; # This value was modified by the initial-setup python script
         }
         
         error_page   500 502 503 504  /50x.html;
