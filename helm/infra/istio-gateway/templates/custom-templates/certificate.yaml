@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: istio-gateway-certificate
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  secretName: istio-gateway-certificate
+  commonName: {{ .Values.host }}
+  dnsNames: 
+    - {{ .Values.host }}
+  issuerRef:
+    # Let’s Encrypt has a strict rate limit on certificates issued, so we use the Staging Let’s Encrypt server for testing, and then we switch to the Production Let’s Encrypt server.
+    name: istio-{{ .Values.issuer }}-issuer 
+    kind: Issuer
+    group: cert-manager.io

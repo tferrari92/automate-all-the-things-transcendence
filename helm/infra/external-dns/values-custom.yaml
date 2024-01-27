@@ -1,0 +1,10 @@
+domainFilters:
+  - tferrari.com # This value was modified by the initial-setup python script
+
+policy: sync
+
+# Every how long External-DNS will check for changes
+interval: 10s
+
+aws:
+  zoneType: "public" # only look at public hosted zones (valid values are public, private or no value for both)

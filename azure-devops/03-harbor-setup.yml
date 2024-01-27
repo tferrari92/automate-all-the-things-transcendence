@@ -1,0 +1,140 @@
+name: harbor-setup
+
+trigger: none
+
+parameters:
+  - name: HARBOR_USER
+    displayName: 'Introduce the user for the Harbor registry'
+    type: string
+  - name: HARBOR_PASSWORD
+    displayName: 'Introduce the password for the Harbor registry'
+    type: string
+
+variables:
+  - group: aws-keys
+  - name: AWS_SERVICE_CONNECTION_NAME
+    value: aws
+  - name: AWS_REGION
+    value: us-east-1  # This value was modified by the initial-setup python script
+  - name: APP_NAME
+    value: gonchi # This value was modified by the initial-setup python script
+  - name: DOMAIN
+    value: tferrari.com # This value was modified by the initial-setup python script
+
+pool:
+  vmImage: 'ubuntu-latest' 
+  # If you are using a self-hosted agent, comment out the previous line and uncomment the following three
+  # name: <agent-pool-name> # Insert here the name of the agent pool you created
+  # demands:
+  #   - agent.name -equals <agent-name> # Insert here the name of the agent you created
+
+
+steps:
+- script: | 
+    curl -X 'POST' -u ${{ parameters.HARBOR_USER }}:${{ parameters.HARBOR_PASSWORD }} \
+      "https://harbor.$(DOMAIN)/api/v2.0/projects" \
+      -H 'accept: application/json' \
+      -H 'X-Resource-Name-In-Location: false' \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "project_name": "$(APP_NAME)",
+      "metadata": {
+        "public": "true",
+        "enable_content_trust": "false",
+        "enable_content_trust_cosign": "false",
+        "prevent_vul": "false",
+        "auto_scan": "false"
+      }
+    }'
+  displayName: 'Create Harbor project for $(APP_NAME)'
+
+# In this case it's necessary to specify the checkout with the persistCredential options set to true. This will enable us to push the changes to the repo.
+- checkout: self
+  persistCredentials: true
+
+- script: | 
+    KUBESEAL_VERSION='0.24.0'
+    wget "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION:?}/kubeseal-${KUBESEAL_VERSION:?}-linux-amd64.tar.gz"
+    tar -xvzf kubeseal-${KUBESEAL_VERSION:?}-linux-amd64.tar.gz kubeseal
+    sudo install -m 755 kubeseal /usr/local/bin/kubeseal
+  displayName: 'Install Kubeseal CLI tool'
+
+- script: | 
+    mkdir ~/.aws
+    echo -e "[default]\naws_access_key_id = $(aws_access_key_id)\naws_secret_access_key = $(aws_secret_access_key)" > ~/.aws/credentials
+    echo -e "[default]\nregion = $(AWS_REGION)"> ~/.aws/config 
+  displayName: 'Configure AWS Profile'
+
+- task: AWSCLI@1
+  displayName: 'Update KubeConfig'
+  inputs:
+    awsCredentials: $(AWS_SERVICE_CONNECTION_NAME)
+    regionName: '$(AWS_REGION)' 
+    awsCommand: 'eks'
+    awsSubCommand: 'update-kubeconfig'
+    awsArguments: '--name $(APP_NAME)-cluster --region $(AWS_REGION)' 
+
+- script: | 
+    ENCODED_CREDENTIALS=$(echo -n '${{ parameters.HARBOR_USER }}:${{ parameters.HARBOR_PASSWORD }}' | base64)
+
+    echo '{
+        "auths": {
+            "https://harbor.$(DOMAIN)": {
+                "auth": "$ENCODED_CREDENTIALS"
+            }
+        }
+    }' > config.json
+
+    kubectl create secret generic harbor-credentials-dev -n $(APP_NAME)-dev \
+        --from-file=.dockerconfigjson=config.json \
+        --type=kubernetes.io/dockerconfigjson \
+        --dry-run=client -o yaml > harbor-credentials-secret-dev.yaml
+
+    kubectl create secret generic harbor-credentials-stage -n $(APP_NAME)-stage \
+        --from-file=.dockerconfigjson=config.json \
+        --type=kubernetes.io/dockerconfigjson \
+        --dry-run=client -o yaml > harbor-credentials-secret-stage.yaml
+
+    kubectl create secret generic harbor-credentials-prod -n $(APP_NAME)-prod \
+        --from-file=.dockerconfigjson=config.json \
+        --type=kubernetes.io/dockerconfigjson \
+        --dry-run=client -o yaml > harbor-credentials-secret-prod.yaml
+  displayName: 'Create secret manifests to be sealed'
+
+- script: | 
+    # We create the sealed secrets only in for the backend. Since front and back share the namespace, if we create the sealed secret for both, it will create the same object twice in the namespace.
+    kubeseal --controller-namespace sealed-secrets --controller-name sealed-secrets -o yaml < harbor-credentials-secret-dev.yaml > helm/my-app/backend/templates/harbor-credentials-sealed-secret-dev.yaml 
+    kubeseal --controller-namespace sealed-secrets --controller-name sealed-secrets -o yaml < harbor-credentials-secret-stage.yaml > helm/my-app/backend/templates/harbor-credentials-sealed-secret-stage.yaml 
+    kubeseal --controller-namespace sealed-secrets --controller-name sealed-secrets -o yaml < harbor-credentials-secret-prod.yaml > helm/my-app/backend/templates/harbor-credentials-sealed-secret-prod.yaml 
+    
+    # We would create them in both if backend and frontend were in different namespaces
+    # kubeseal --controller-namespace sealed-secrets --controller-name sealed-secrets -o yaml < harbor-credentials-secret-dev.yaml | tee -a helm/my-app/frontend/templates/harbor-credentials-sealed-secret-dev.yaml > helm/my-app/backend/templates/harbor-credentials-sealed-secret-dev.yaml
+    # kubeseal --controller-namespace sealed-secrets --controller-name sealed-secrets -o yaml < harbor-credentials-secret-stage.yaml | tee -a helm/my-app/frontend/templates/harbor-credentials-sealed-secret-stage.yaml > helm/my-app/backend/templates/harbor-credentials-sealed-secret-stage.yaml
+    # kubeseal --controller-namespace sealed-secrets --controller-name sealed-secrets -o yaml < harbor-credentials-secret-prod.yaml | tee -a helm/my-app/frontend/templates/harbor-credentials-sealed-secret-prod.yaml > helm/my-app/backend/templates/harbor-credentials-sealed-secret-prod.yaml
+  displayName: 'Create the Sealed Secrets with Kubeseal'
+
+- script: | 
+    echo "{{- if eq .Values.environment \"dev\" }} # Deploy only in dev environment" | cat - helm/my-app/backend/templates/harbor-credentials-sealed-secret-dev.yaml > temp && mv temp helm/my-app/backend/templates/harbor-credentials-sealed-secret-dev.yaml
+    echo "{{- end }}" >> helm/my-app/backend/templates/harbor-credentials-sealed-secret-dev.yaml
+
+    echo "{{- if eq .Values.environment \"stage\" }} # Deploy only in stage environment" | cat - helm/my-app/backend/templates/harbor-credentials-sealed-secret-stage.yaml > temp && mv temp helm/my-app/backend/templates/harbor-credentials-sealed-secret-stage.yaml
+    echo "{{- end }}" >> helm/my-app/backend/templates/harbor-credentials-sealed-secret-stage.yaml
+
+    echo "{{- if eq .Values.environment \"prod\" }} # Deploy only in prod environment" | cat - helm/my-app/backend/templates/harbor-credentials-sealed-secret-prod.yaml > temp && mv temp helm/my-app/backend/templates/harbor-credentials-sealed-secret-prod.yaml
+    echo "{{- end }}" >> helm/my-app/backend/templates/harbor-credentials-sealed-secret-prod.yaml
+  displayName: 'Modify form helm environments'
+
+- script: |
+    git pull origin main
+    git config --global user.email "AzureDevOps@HarborSetupPipeline.com"
+    git config --global user.name "Azure DevOps - Harbor Setup Pipeline"
+    git checkout -b main
+    git add helm/my-app/backend/templates/harbor-credentials-sealed-secret-dev.yaml  
+    git add helm/my-app/backend/templates/harbor-credentials-sealed-secret-stage.yaml  
+    git add helm/my-app/backend/templates/harbor-credentials-sealed-secret-prod.yaml  
+    # git add helm/my-app/frontend/templates/harbor-credentials-sealed-secret-dev.yaml  
+    # git add helm/my-app/frontend/templates/harbor-credentials-sealed-secret-stage.yaml  
+    # git add helm/my-app/frontend/templates/harbor-credentials-sealed-secret-prod.yaml
+    git commit -m "Sealed secrets created by Azure DevOps"
+    git push --set-upstream origin main
+  displayName: 'Push changes to GitHub'

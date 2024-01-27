@@ -1,0 +1,43 @@
+# Since we are using EKS, control plane is abstracted from us so we don´t neet to manage or monitor etcd, scheduler or controller
+defaultRules:
+  rules:
+    etcd: false
+    kubeScheduler: false
+kubeControllerManager:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeScheduler:
+  enabled: false
+
+prometheus:
+  prometheusSpec:
+    # Configure Persistent Volume for Prometheus storage to avoid data loss if pods are restarted
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp2
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 5Gi
+              
+    # Values for Service Monitor and Pod Monitor selectors
+    # serviceMonitorSelector:
+    #   matchLabels:
+    #     release: kube-prometheus-stack 
+    # podMonitorSelector:
+    #   matchLabels:
+    #     release: kube-prometheus-stack
+    
+    # Remote Write all the scrapped data to Cortex side with specific header parameter
+    # remoteWrite:
+    # - url: http://cortex-distributor.cortex.svc:8080/api/prom/push
+    #   headers:
+    #     X-Scope-OrgID: internal-prometheus
+    
+        
+
+grafana:
+  enabled: false # We will use a separate helm chart to deploy Grafana which gives us more freedom in terms of dashboards.

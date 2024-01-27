@@ -1,0 +1,12 @@
+# Had to modify values.schema.json to incorporate these three values
+host: tferrari.com # This value was modified by the initial-setup python script
+email: tomas.ferrari@sendati.com # This value was modified by the initial-setup python script
+issuer: staging # Options are "staging" and "production"
+
+global:
+  istioNamespace: service-mesh
+
+service:
+  annotations: 
+    external-dns.alpha.kubernetes.io/hostname: "tferrari.com,dev.tferrari.com,stage.tferrari.com" # This value was modified by the initial-setup python script
+  

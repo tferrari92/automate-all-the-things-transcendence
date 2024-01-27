@@ -1,0 +1,21 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: istio-production-issuer
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  acme:
+    # Let’s Encrypt has a strict rate limit on certificates issued, so we use the Staging Let’s Encrypt server for testing, and then we switch to the Production Let’s Encrypt server.
+    server: https://acme-v02.api.letsencrypt.org/directory # Uncomment when switching to Production
+    email: {{ .Values.email }}
+    privateKeySecretRef:
+      # Reference to Production secret
+      name: istio-production-issuer
+    solvers:
+      - selector: {}
+        http01:
+          ingress:
+            class: istio
+
+

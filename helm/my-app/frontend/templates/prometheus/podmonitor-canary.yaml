@@ -1,0 +1,23 @@
+# We create a PodMonitor so that Prometheus can monitor the pods. PodMonitors and ServiceMonitors must be deployed in the same namespace as Prometheus
+# In dev environment this actually monitors the regular deployemnt since there is no canary. 
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  # If environment is dev, the name will be <appName>-<service>-dev-pods, else it will be <appName>-<service>-<environmnet>-canary-pods. This is because in dev we have no canary deployment.
+  name: {{ .Values.appName }}-{{ .Values.service }}-{{ .Values.environment }}-{{ if eq .Values.environment "dev" }}pods{{ else }}canary-pods{{ end }}
+  # name: {{ .Values.appName }}-{{ .Values.service }}-{{ .Values.environment }}-canary-pods
+  namespace: observability
+  labels:
+    release: kube-prometheus-stack # Required to be scraped by Prometheus server
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Values.appName }}-{{ .Values.environment }}
+  selector:
+    matchLabels:
+      # This will make it monitor the canary (temporary) deployment
+      app: {{ .Values.appName }}-{{ .Values.service }}-{{ .Values.environment }}
+      istio: monitor
+  podMetricsEndpoints:
+    - port: http-envoy-prom
+      path: stats/prometheus

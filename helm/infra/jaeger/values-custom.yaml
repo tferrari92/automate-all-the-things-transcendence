@@ -1,0 +1,56 @@
+query:
+  ingress:
+    enabled: true
+
+    annotations: 
+      # External-DNS related annotations
+      external-dns.alpha.kubernetes.io/hostname: jaeger.tferrari.com 
+
+      # ALB related annotations
+      kubernetes.io/ingress.class: alb
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+      alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+      alb.ingress.kubernetes.io/healthcheck-interval-seconds: '15'
+      alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+      alb.ingress.kubernetes.io/success-codes: '200'
+      alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+      alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
+
+      # TLS related annotations
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:373421766055:certificate/d9b3107e-3882-4fff-b8b3-cf33f76daffb # This value was modified by the deploy-infra pipeline
+
+    hosts: 
+      - jaeger.tferrari.com  # This value was modified by the initial-setup python script
+    pathType: Prefix
+
+# Allow recieving traces from Istio
+collector:
+  service:
+    zipkin: 
+      port: 9411
+
+
+cassandra:
+  persistence:
+    # To enable persistence, please see the documentation for the Cassandra chart
+    enabled: true
+    storageClass: "gp2"
+    size: 5Gi
+  config:
+    cluster_size: 1
+  # livenessProbe:
+  #   initialDelaySeconds: 180
+  #   periodSeconds: 60
+  #   timeoutSeconds: 10
+  #   successThreshold: 1
+  #   failureThreshold: 3
+  # readinessProbe:
+  #   initialDelaySeconds: 180
+  #   periodSeconds: 60
+  #   timeoutSeconds: 10
+  #   successThreshold: 1
+  #   failureThreshold: 3
+  #   address: "${POD_IP}"

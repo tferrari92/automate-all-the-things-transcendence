@@ -1,0 +1,9 @@
+appName: gonchi # This value was modified by the initial-setup python script
+email: tomas.ferrari@sendati.com # This value was modified by the initial-setup python script
+
+# BORRAR!
+# host: tferrari.com # This value was modified by the initial-setup python script
+# certificateNamespace: service-mesh
+
+installCRDs: true
+

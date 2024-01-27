@@ -1,0 +1,13 @@
+appName: gonchi # This value was modified by the initial-setup python script
+
+service: backend
+
+containerPort: 3000 # Port where the app in the container exposes the service
+
+deployment:
+  labels: {    
+    istio: monitor # This label is used by the PodMonitor
+  }
+  image:
+    repository: harbor.tferrari.com/gonchi/backend # This value was modified by the initial-setup python script
+    # repository: tferrari92/gonchi-backend # This value was modified by the harbor-setup pipeline

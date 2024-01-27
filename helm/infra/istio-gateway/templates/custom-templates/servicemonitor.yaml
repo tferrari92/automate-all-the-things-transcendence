@@ -1,0 +1,18 @@
+# We create a ServiceMonitor so that Prometheus can monitor the gateway. PodMonitors and ServiceMonitors must be deployed in the same namespace as Prometheus
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: istio-gateway-servicemonitor
+  namespace: observability
+  labels:
+    release: kube-prometheus-stack # Required to be scraped by Prometheus server
+spec:
+  namespaceSelector:
+    matchNames:
+      - service-mesh
+  selector:
+    matchLabels:
+      app: gateway # Label of the service that assigned to the gateway pod
+  endpoints:
+    - port: metrics
+      path: stats/prometheus

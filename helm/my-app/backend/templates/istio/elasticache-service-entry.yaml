@@ -1,0 +1,15 @@
+# From my understanding, this should only be required when the meshConfig.outboundTrafficPolicy.mode in Istiod values is set to REGISTRY_ONLY
+# But apparently it's necessary to connect to external ElastiCache even if meshConfig.outboundTrafficPolicy.mode is set to ALLOW_ANY, I don't understand why...
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: {{ .Values.environment }}-elasticache-serviceentry
+spec:
+  hosts:
+  - {{ .Values.redis_host }}
+  ports:
+  - number: 6379
+    name: tcp
+    protocol: TCP
+  location: MESH_EXTERNAL
+  resolution: NONE # We use NONE which is not a safe practice, but using DNS creates this issue: https://istio.io/latest/blog/2020/dns-proxy/#external-tcp-services-without-vips. This is apprently solved in Istio Version 1.8 (https://istio.io/latest/blog/2020/dns-proxy/#automatic-vip-allocation-where-possible) but I still can't get it to work with DNS

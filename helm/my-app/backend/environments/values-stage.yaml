@@ -1,0 +1,11 @@
+environment: stage
+
+redis_host: dfs # This value was modified by the deploy-infra pipeline
+
+deployment:
+  image:
+    tag: 1481
+  replicas: 1
+
+secret:
+  redis_pass: AgAOSVz7lLpCZDfvLQjObqDVPKKXBybQdUXn+Jr8qszbIskNykMn6FilQ5ygVep26pjmA/O2mEpQkvuR+K0ZRduleeQvj3CUOSYuJzlA/+OJFZPgsDv1axUTg4B6pV4eLjKtvSCalF+LgC4D2PjCnvK0AI6eB405M7KMBIE3w77fyM9tESJSzOC9lT1q8QW5HnwL2Po2P8mBrUJb0AZxYyO8xl6tmoJRaf9gJ/Mt1EkhxXTB/Ok164DtU34zS1Rlv2M/2AxGEALP82CsEYrFA+M/WFiX4vo3PfrbhBPs4dh5PtVKxPfZJC3D7725QGAowuX92bh/m/dxTmmMlQXUPAYhmqRGusQc0oPEy4MAIDEDqOtDW9pqaSGq6NEMYT6TVaFilw4ruNfDZMTgCug+N3EyhEpTV9GB+DFzCriIHYzD2bA5WcIJjOMuluuRXnEcRkEpy/XYpmGIJaxi5x/N0ycWBMv9lOG70clZ5eX0gwr7dBTiQRzXe2KtRqdAY6mtqKSJM7l8lFK6uTlC9ty9ZtAM0S4/btO3sGhRp6N4FlAD/p7s+D5FjIUpyqGsFgEQMX2/cR2QVlsvCZ82TS1uvBwULxuBVUcFSPYdLFbmR5RFufY5H9es1JrwhfLUaEUy5BbY7FR3eknnt1FzbPEmbVnZ9RVQvWKP2SmSCKCfIGqtEzwq2XFXOQa/jYZzlw5WgAparoSyoBc2+QlIIi1DtZoQV93ptUp11/Bklj4L2qMiVKhu0bYgR2X+oVi+zR+o33eg # This value was modified by the sealed-secrets pipeline

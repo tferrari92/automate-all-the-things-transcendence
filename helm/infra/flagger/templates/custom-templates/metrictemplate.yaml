@@ -1,0 +1,31 @@
+# THIS WAS MANUALLY ADDED
+# https://docs.flagger.app/dev/upgrade-guide#istio-telemetry-v2
+
+# Istio 1.5 comes with a breaking change for Flagger uses. 
+# In Istio telemetry v2 the metric istio_request_duration_seconds_bucket has been removed and replaced with istio_request_duration_milliseconds_bucket and this breaks the request-duration metric check.
+# You can create a metric template using the old duration metric like this:
+
+# Also, for the parameters "namespace", "target" and "interval" inside the query, we had to use backticks to escape the double curly braces so Helm does't get confused. 
+
+apiVersion: flagger.app/v1beta1
+kind: MetricTemplate
+metadata:
+  name: latency
+  namespace: {{ .Release.Namespace }}
+spec:
+  provider:
+    type: prometheus
+    address: {{ .Values.metricsServer }}
+  query: |
+    histogram_quantile(
+        0.99,
+        sum(
+            rate(
+                istio_request_duration_milliseconds_bucket{
+                    reporter="destination",
+                    destination_workload_namespace={{`"{{ namespace }}"`}},
+                    destination_workload=~{{`"{{ target }}"`}}
+                }[{{`{{ interval }}`}}]
+            )
+        ) by (le)
+    )
