@@ -11,7 +11,7 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   source:
-    repoURL: https://github.com/tomasferrarisenda/automate-all-the-things-transcendence.git # This value was modified by the initial-setup python script
+    repoURL: https://github.com/AATT_GITHUB_USERNAME/automate-all-the-things-transcendence.git # This value was modified by the initial-setup python script
     path: helm/infra/argo-cd
     helm:
       valueFiles:

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gonchi-back-prod # This value was modified by the initial-setup python script
+  name: AATT_APP_NAME-back-prod # This value was modified by the initial-setup python script
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io # Adding the finalizer enables cascading deletes when implementing the App of Apps pattern. If this isn't used, when you remove the application yaml from git, the application will be removed from ArgoCD but the resources will remain active in the cluster
@@ -9,7 +9,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
-    namespace: gonchi-prod # This value was modified by the initial-setup python script
+    namespace: AATT_APP_NAME-prod # This value was modified by the initial-setup python script
     server: https://kubernetes.default.svc
   project: my-app
   source:
@@ -17,7 +17,7 @@ spec:
     helm:
       valueFiles:
         - environments/values-prod.yaml
-    repoURL: https://github.com/tomasferrarisenda/automate-all-the-things-transcendence.git # This value was modified by the initial-setup python script
+    repoURL: https://github.com/AATT_GITHUB_USERNAME/automate-all-the-things-transcendence.git # This value was modified by the initial-setup python script
   syncPolicy:
     automated:
       prune: true

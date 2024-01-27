@@ -15,11 +15,11 @@ variables:
   - name: AWS_SERVICE_CONNECTION_NAME
     value: aws
   - name: AWS_REGION
-    value: us-east-1  # This value was modified by the initial-setup python script
+    value: AATT_AWS_REGION  # This value was modified by the initial-setup python script
   - name: APP_NAME
-    value: gonchi # This value was modified by the initial-setup python script
+    value: AATT_APP_NAME # This value was modified by the initial-setup python script
   - name: DOMAIN
-    value: tferrari.com # This value was modified by the initial-setup python script
+    value: AATT_DOMAIN # This value was modified by the initial-setup python script
 
 pool:
   vmImage: 'ubuntu-latest' 

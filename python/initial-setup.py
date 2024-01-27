@@ -85,13 +85,12 @@ print_gradually(
     "Got it! In what AWS region will you be deploying your resources? (e.g. 'us-east-2'): ")
 aws_region = input()
 
-print_gradually("Good choice! What's your DockerHub username?: ")
+print_gradually(
+    "Good choice! We're almost done. Tell me the domain you own (e.g. 'example.com'): ")
 dockerhub_username = input()
 
-print_gradually("We're almost done. What's the domain you own? (e.g. 'example.com'): ")
-domain = input()
-
-print_gradually("Perfect! Last thing... You'll recieve just one pipeline notification through email. Please provide me with the email you used for your Azure DevOps account: ")
+print_gradually(
+    "Perfect! Last thing... You'll recieve just one pipeline notification through email. Please provide me with the email you used for your Azure DevOps account: ")
 user_email = input()
 
 print_gradually("Give me a sec... ")
@@ -101,7 +100,6 @@ data = {
     "AATT_APP_NAME": app_name,
     "AATT_GITHUB_USERNAME": github_username,
     "AATT_AWS_REGION": aws_region,
-    "AATT_DOCKERHUB_USERNAME": dockerhub_username,
     "AATT_USER_EMAIL": user_email,
     "AATT_DOMAIN": domain,
 }

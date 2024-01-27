@@ -1,5 +1,5 @@
-project = "gonchi"   # This value was modified by the initial-setup python script
-region  = "us-east-1" # This value was modified by the initial-setup python script
-domain  = "tferrari.com" # This value was modified by the initial-setup python script
+project = "AATT_APP_NAME"   # This value was modified by the initial-setup python script
+region  = "AATT_AWS_REGION" # This value was modified by the initial-setup python script
+domain  = "AATT_DOMAIN" # This value was modified by the initial-setup python script
 # aws_access_key = ""
 # aws_secret_key = ""

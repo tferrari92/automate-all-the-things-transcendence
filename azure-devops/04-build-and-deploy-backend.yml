@@ -10,11 +10,9 @@ trigger:
 
 variables:
   - name: APP_NAME
-    value: gonchi # This value was modified by the initial-setup python script
+    value: AATT_APP_NAME # This value was modified by the initial-setup python script
   - name: USER_EMAIL
-    value: tomas.ferrari@sendati.com # This value was modified by the initial-setup python script
-  - name: DOMAIN
-    value: tferrari.com # This value was modified by the initial-setup python script
+    value: AATT_USER_EMAIL # This value was modified by the initial-setup python script
 
     
 pool:
