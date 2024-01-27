@@ -111,6 +111,7 @@ Here's my attempt at making the world a better place. People in the future will 
 - [Active GitHub account](https://github.com/)
 - [Active AWS account](https://aws.amazon.com/)
 - [Active Azure DevOps account](https://azure.microsoft.com/en-us/free/)
+- Ownership of a domain and having it hosted in AWS Route53
 
 <br/>
 
@@ -162,6 +163,8 @@ Our app is a very simple static website, but I'm not spoiling it for you. You'll
 <br/>
 
 ## Disclaimer
+
+This is not a free project, it will cost you between $1 US dollars and $10 depending on how long you run the resources for. That's assuming you run them for a few hours tops, not days. Always remember to run the [destroy-all-the-things pipeline](/azure-devops/06-destroy-all-the-things.yml) when you are done.
 
 For this Transcendence Edition we assume that you own a domain like "example.com" and it's managed in your AWS account.
 
