@@ -25,9 +25,9 @@ This Transcendence Edition builds upon the [Braindamage Edition](https://github.
 
 ### New features:
 
-- Horizontal Pod Autoscaler
-- External DNS
-- X.509 certificate management with Cert Manager
+- Horizontal Pod Autoscaler & Metrics-Server
+- DNS record provisioning with External-DNS
+- TLS certificate provisioning with Cert-Manager
 - Self-hosted container image registry with Harbor (we're ditching DockerHub)
 
 ### Versions in order of complexity:
