@@ -765,7 +765,7 @@ helm pull jenkinsci/jenkins --untar
 
 That's it! Now you just need to wait. When Argo sees the new application.yaml it will deploy it automatically.<br>
 If you need to make any further customizations to the chart, you can modify the values-custom.yaml or the contents of the custom-templates directory.<br>
-If you want to remove the tool from your cluster, [just delete the application.yaml you created and wait](https://i.imgur.com/COOgWcv.jpg).
+If you want to remove the tool from your cluster, [just delete the application.yaml you created and wait](https://i.imgur.com/KcSXPER.jpg).
 
 We can follow this same logic for deploying new my-app services, for example for a second backend.
 
