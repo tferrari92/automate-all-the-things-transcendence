@@ -1,4 +1,4 @@
-# AWS Networking 
+# Networking Notes 
 
 For the creation of the AWS VPC we followed the [recommended VPC for EKS guidelines by Amazon](https://docs.aws.amazon.com/eks/latest/userguide/creating-a-vpc.html) for the "Public and private subnets" option. If you don't like reading [watch this](https://www.youtube.com/watch?v=nIIxexG7_a8&list=PLiMWaCMwGJXkeBzos8QuUxiYT6j8JYGE5&index=1&ab_channel=AntonPutra).
 
