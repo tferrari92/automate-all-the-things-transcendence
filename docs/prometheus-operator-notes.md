@@ -32,9 +32,15 @@ Differences:
 - Use Cases: ServiceMonitor is ideal when services are the primary abstraction for your applications, and you're interested in metrics at the service level. PodMonitor is better suited for scenarios where direct pod metrics are necessary, such as monitoring specific sidecar containers or jobs without a service.
 
 #### IMPORTANT:
-- By default PodMonitors and ServiceMonitors MUST be created in the same namespace as the Prometheus Operator.
+- By default PodMonitors and ServiceMonitors MUST be deployed in the same namespace as the Prometheus Operator.
 - In our PodMonitors and ServiceMonitors we must include a "release" label. This label allows Prometheus Operator to automatically discover the new PodMonitor/ServiceMonitor in the cluster. The value of the "release" label is defined in the Prometheus Operator configuration. In our case the value of release must be "kube-prometheus-stack". Look at [this manifest](helm/infra/istio-gateway/templates/custom-templates/servicemonitor.yaml) for example.
 
-<!-- 
-COMO ESTAMOS JUTNANTO METRICS DE ISTIO O DE MY-APP????? -->
-<!-- QUE PODMONIROS Y SERVICEMONITORS CREAMOS Y PORQ???? -->
+</br>
+
+# How we implement it
+
+Some tools like Flagger have the option to enable monitoring in the chart by default. We enabled Flagger's monitoring through the chart's [values](helm/infra/flagger/values-custom.yaml).
+
+For Istio Gateway, we created a Service that connects to the Istio Gateway Pod and a ServiceMonitor for this Service. The Istio Gateway Pod exports metrics in the stats/prometheus path by default, so we didn't need to create an exporter.
+
+For the my-app services (backend and frontend), we created a PodMonitor for the Canary pods and another PodMonitor for the Primary pods. Since we are using Istio, the Envoy sidecar container will be the responsible for exposing metrics in the stats/prometheus path, so there was no need to create exporters for these either.
