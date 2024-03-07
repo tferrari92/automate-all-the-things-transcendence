@@ -39,6 +39,9 @@ This Transcendence Edition builds upon the [Braindamage Edition](https://github.
 5. [Transcendence Edition](https://github.com/tferrari92/automate-all-the-things-transcendence)
 6. [Nirvana Edition](https://github.com/tferrari92/automate-all-the-things-nirvana)
 
+### Spin-offs:
+- [Backstage Minikube Lab](https://github.com/tferrari92/backstage-minikube-lab)
+
 <br/>
 
 # **INDEX**
