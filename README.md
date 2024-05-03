@@ -538,7 +538,7 @@ Here are the specific numbers:
 
 <br/>
 <br/>
-<p title="Feeling of power" align="center"> <img width="460" src="https://i.imgur.com/o4LuRu7.jpg"> </p>
+<p title="Kill chain" align="center"> <img width="460" src="https://i.imgur.com/KcSXPER.jpg"> </p><br/><br/>
 <br/>
 <br/>
 
