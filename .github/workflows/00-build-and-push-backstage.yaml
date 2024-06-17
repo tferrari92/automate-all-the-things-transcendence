@@ -1,0 +1,89 @@
+name: 00-Build & push Backstage image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backstage/my-backstage/**'
+
+env:
+  APP_NAME: backstage
+  
+jobs:
+  build-and-push:
+    name: Build & push docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use appropiate versions of Node.js and Yarn
+        run: |
+          sudo apt update
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+          nvm install 18
+          nvm use 18
+          nvm alias default 18
+          echo "#######################"
+          echo "Node version: $(node --version)"
+          echo "#######################"
+          
+          yarn set version 1.22.19
+          echo "#######################"
+          echo "Yarn version: $(yarn --version)"
+          echo "#######################"
+
+      - name: Yarn install and build
+        working-directory: backstage/my-backstage
+        run: |
+          yarn install --frozen-lockfile
+
+          # tsc outputs type definitions to dist-types/ in the repo root, which are then consumed by the build
+          yarn tsc
+
+          # Build the backend, which bundles it all up into the packages/backend/dist folder.
+          # The configuration files here should match the one you use inside the Dockerfile below.
+          yarn build:backend --config ../../app-config.production.yaml
+
+      - name: Build and push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v4
+        with:
+          image: ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}
+          tag: ${{ github.run_number }}
+          registry: docker.io
+          directory: backstage/my-backstage
+          dockerfile: backstage/my-backstage/packages/backend/Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+
+  update-helm-values:
+    name: Update image tag in values-custom.yaml
+    # if: ${{ success() }}
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # We update the local repo with a pull just in case there have been any recent modifications
+      - name: Update repo
+        run: git pull
+
+      - name: Update tag in values-dev.yaml
+        run: |
+          sed 's/tag:.*/tag: "${{github.run_number}}" # This value was modified by the backstage build and push pipeline/g' helm-charts/infra/backstage/values-custom.yaml > values-custom.temp
+          mv values-custom.temp helm-charts/infra/backstage/values-custom.yaml
+
+      - name: Commit changes to GitHub
+        run: |
+          git config --global user.email "GitHubActions@Build&Deploy${{ env.APP_NAME }}Workflow.com"
+          git config --global user.name "GitHub Actions - Build & Deploy ${{ env.APP_NAME }} Workflow"
+          git add helm-charts/infra/backstage/values-custom.yaml
+          git commit -m "${{ env.APP_NAME }} image tag updated to ${{github.run_number}} by GitHub Actions"
+          git push

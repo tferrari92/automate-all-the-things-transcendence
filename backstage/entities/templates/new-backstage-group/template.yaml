@@ -1,0 +1,116 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: new-backstage-group
+  title: New Backstage Group
+  description: Create new Backstage group
+  tags:
+    - backstage
+spec:
+  owner: web@example.com
+  type: component
+  parameters:
+
+    ###############################################################################################################
+    # First page
+    - title: Provide some simple information
+      required:
+        - name
+        - description
+        - type
+        - email
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Name of the new group
+          ui:field: EntityNamePicker
+          pattern: '^[a-z0-9-]+$' # Only lowercase letters, numbers and hyphens
+          maxLength: 30
+          ui:help: 'Use only lowercase letters, numbers and hyphens. Max length: 30 characters.'  
+
+        description:
+          title: Description
+          type: string
+          description: Describe the new group.
+          minLength: 10
+          ui:help: 'Make it descriptive! At least 10 characters.'
+
+        parent:
+          title: Parent
+          type: string
+          description: Parent of the new group.
+          ui:help: If empty, it will default to 'root'
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter: # This uses the value "group:default/meme-web-team"
+              - kind: Group
+
+        type:
+          title: Type
+          type: string
+          description: Type of the new group
+          enum:
+            - team
+            - business-unit
+            - product-area
+
+        email:
+          title: Email
+          type: string
+          pattern: ^\S+@\S+\.\S+$
+          description: Email of the new group
+
+    ###############################################################################################################
+    # Second page
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            # allowedOrganizations: # This doesn't get displayed as a dropdown list like allowedRepos does, IDK why.
+            #   - AATT_DOCKERHUB_USERNAME
+            #   - AATT_DOCKERHUB_USERNAME
+            allowedRepos:
+              - automate-all-the-things-braindamage
+              - automate-all-the-things-transcendence
+              - automate-all-the-things-nirvana
+              - automate-all-the-things-almighty
+
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          type: ${{ parameters.type }}
+          parent: ${{ parameters.parent | replace('group:default/', '') }}
+          email: ${{ parameters.email }}
+
+    - id: publish
+      name: Publish
+      action: publish:github:pull-request
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        title: "Create new group: ${{ parameters.name }}"
+        branchName: create-group-${{ parameters.name }}
+        description: |
+          # New group: ${{ parameters.name }}
+
+          ${{ parameters.description if parameters.description }}
+        targetPath: backstage/entities/groups
+        
+  output:
+    links:
+      - url: ${{ steps.publish.output.remoteUrl }}
+        title: "Go to PR"

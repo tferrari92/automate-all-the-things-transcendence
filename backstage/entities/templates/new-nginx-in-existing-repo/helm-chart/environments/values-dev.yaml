@@ -1,0 +1,14 @@
+environment: dev
+    
+deployment:
+  image:  
+    tag: 
+  replicas: 1
+  labels:
+    full-name: ${{ values.system }}-${{ values.service }}-dev
+
+configmap: 
+  nginxConf: |-
+      location /api {
+          proxy_pass http://${{ values.system }}-backend-dev-service:3000/;
+      }

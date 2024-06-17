@@ -1,0 +1,20 @@
+# We create a PodMonitor so that Prometheus can monitor the pods. PodMonitors and ServiceMonitors must be deployed in the same namespace as Prometheus
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-primary-pods
+  namespace: observability
+  labels:
+    release: kube-prometheus-stack # Required to be scraped by Prometheus server
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Values.system }}-{{ .Values.environment }}
+  selector:
+    matchLabels:
+      # This will make it monitor the primary (main) deployment      
+      app: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-primary
+      istio: monitor
+  podMetricsEndpoints:
+    - port: http-envoy-prom
+      path: stats/prometheus

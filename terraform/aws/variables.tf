@@ -1,5 +1,5 @@
 variable "project" {
-  description = "Name to be used on all the resources as identifier. e.g. Project name, Application name"
+  description = "Name to be used on all the resources as identifier"
   type        = string
 }
 
@@ -8,7 +8,8 @@ variable "region" {
   type        = string
 }
 
-variable "domain" {
+variable "system" {
+  description = "The system the Elasticache DBs will be deployed for"
   type        = string
 }
 

@@ -638,12 +638,12 @@ az devops configure --defaults  organization=https://dev.azure.com/tomasferrari 
 
 c. Create service-connection to github
 ```bash
-az devops service-endpoint github create --name github-sc --github-url https://github.com/tferrari92/automate-all-the-things.git
+az devops service-endpoint github create --name github-sc --github-url https://github.com/AATT_DOCKERHUB_USERNAME/automate-all-the-things.git
 ```
 
 d. Create pipeline
 ```bash
-az pipelines create --name create-bucket --repository https://github.com/tferrari92/automate-all-the-things.git --branch main --yml-path azure-devops/deploy-aws-resources.yml --service-connection github-sc
+az pipelines create --name create-bucket --repository https://github.com/AATT_DOCKERHUB_USERNAME/automate-all-the-things.git --branch main --yml-path azure-devops/deploy-aws-resources.yml --service-connection github-sc
 ```
 
 <a href="https://www.youtube.com/watch?v=EzWNBmjyv7Y" target="_blank">"Fine... I'll do it myself"</a>.

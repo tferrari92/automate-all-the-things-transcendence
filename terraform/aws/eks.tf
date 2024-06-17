@@ -83,11 +83,6 @@ resource "aws_iam_role_policy_attachment" "amazon-ec2-container-registry-read-on
   role       = aws_iam_role.nodes.name
 }
 
-resource "aws_iam_role_policy_attachment" "external-dns" {
-  policy_arn = aws_iam_policy.external_dns_controller.arn
-  role       = aws_iam_role.nodes.name
-}
-
 resource "aws_eks_node_group" "private-nodes" {
   cluster_name    = aws_eks_cluster.cluster.name
   version         = aws_eks_cluster.cluster.version
@@ -120,7 +115,6 @@ resource "aws_eks_node_group" "private-nodes" {
     aws_iam_role_policy_attachment.amazon-eks-worker-node-policy,
     aws_iam_role_policy_attachment.amazon-eks-cni-policy,
     aws_iam_role_policy_attachment.amazon-ec2-container-registry-read-only,
-    aws_iam_role_policy_attachment.external-dns
   ]
 
   # Allow external changes without Terraform plan difference
@@ -132,6 +126,7 @@ resource "aws_eks_node_group" "private-nodes" {
 
 
 # ----------------- OIDC -----------------
+# This binds AWS's IAM with Kubernetes's RBAC. It allows Kubernetes to authenticate AWS users.
 
 data "tls_certificate" "eks" {
   url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer

@@ -1,0 +1,49 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: meme-web-backend-api
+  description: The meme-web backend service API
+  tags:
+    - restful
+spec:
+  type: openapi
+  lifecycle: production
+  owner: meme-web-backend-subteam
+  system: meme-web
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: My App API
+      version: 1.0.0
+    servers:
+      - url: http://{host}:{port}
+        variables:
+          host:
+            default: localhost # Replace with your server host
+          port:
+            default: 3000 # Replace with your server port
+    paths:
+      /:
+        get:
+          summary: Retrieve visitor count
+          responses:
+            '200':
+              description: Visitor count retrieved successfully
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                        description: The current visitor count
+            '500':
+              description: Failed to retrieve visitor count
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      error:
+                        type: string
+                        description: Error message

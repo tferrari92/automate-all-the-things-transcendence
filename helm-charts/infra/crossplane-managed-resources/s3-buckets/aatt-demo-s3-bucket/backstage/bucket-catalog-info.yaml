@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: aatt-demo-bucket
+  description: aatt-demo S3 bucket
+  tags:
+    - aws 
+    - s3
+spec:
+  type: s3-bucket
+  lifecycle: experimental
+  owner: aatt-demo-team
+  system: aatt-demo-system

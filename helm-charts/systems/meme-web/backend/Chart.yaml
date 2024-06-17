@@ -1,0 +1,4 @@
+apiVersion: v2
+name: meme-web-backend # This value was modified by the initial-setup python script
+description: A Helm chart for deploying meme-web-backend # This value was modified by the initial-setup python script
+version: 1.0

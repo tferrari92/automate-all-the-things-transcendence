@@ -1,0 +1,14 @@
+# This is necessary to originate a TLS connection when connecting to the ElastiCache DB because it is password protected (which requires TLS encryption)
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ .Values.environment }}-elasticache-destinationrule
+spec:
+  host: master.{{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ec-rep-grp.shelfr.use1.cache.amazonaws.com
+  # host: {{ .Values.redis_host }}
+  trafficPolicy:
+    portLevelSettings:
+    - port:
+        number: 6379
+      tls:
+        mode: SIMPLE

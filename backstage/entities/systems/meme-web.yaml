@@ -1,0 +1,7 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: meme-web
+  description: Website that provides quality memes
+spec:
+  owner: meme-web-team

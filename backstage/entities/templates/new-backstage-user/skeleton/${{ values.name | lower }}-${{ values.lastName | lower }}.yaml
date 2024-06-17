@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: ${{ values.name | lower }}-${{ values.lastName | lower }}
+spec:
+  profile:
+    displayName: "${{ values.name }} ${{ values.lastName }}"	
+    email: ${{ values.email }}
+    picture: ${{ values.pictureURL }}
+  memberOf:
+    - ${{ values.group }}

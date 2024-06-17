@@ -1,0 +1,27 @@
+apiVersion: elasticache.aws.upbound.io/v1beta1
+kind: ReplicationGroup
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ec-rep-grp
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  forProvider:
+    automaticFailoverEnabled: true
+    description: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-elascache-rep-group
+    engineVersion: "7.1"
+    nodeType: cache.t4g.micro
+    numCacheClusters: 2
+    region: {{ .Values.region }}
+    securityGroupIdRefs: 
+      - name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-db-sec-grp
+    subnetGroupNameRef:
+      name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-elasticache-subnet-group
+    transitEncryptionEnabled: true
+    authTokenSecretRef:
+      namespace: {{ .Values.system }}-{{ .Values.environment }}
+      name: redis-secret 
+      key: REDIS_PASS
+    tags:
+      Name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ec-rep-grp
+  providerConfigRef:
+    name: aws

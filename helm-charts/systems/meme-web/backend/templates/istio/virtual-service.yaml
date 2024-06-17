@@ -1,0 +1,15 @@
+{{- if eq .Values.environment "dev" }} # Deploy only in dev environment
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-virtual-service
+spec:
+  gateways:
+    - mesh
+  hosts:
+    - {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-service.{{ .Values.system }}-{{ .Values.environment }}.svc.cluster.local
+  http:
+    - route:
+        - destination:
+            host: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-service.{{ .Values.system }}-{{ .Values.environment }}.svc.cluster.local
+{{- end }}

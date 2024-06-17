@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: meme-web-frontend-subteam
+  title: meme-web-frontend-subteam
+  description: Responsible for maintaining and developing the frontend of meme-web
+  tags:
+    - engineering
+    - reactjs
+spec:
+  type: team
+  children: []
+  parent: meme-web-team
+  # members:
+  #   - geralt
+  profile:
+    email: meme-web-frontend-subteam@example.com
+    # slack: 

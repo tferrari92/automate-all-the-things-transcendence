@@ -1,0 +1,26 @@
+system: meme-web 
+
+service: backend
+
+port: 3000
+
+deployment:
+  labels:
+    system: meme-web 
+    service: backend
+    backstage.io/kubernetes-id: meme-web-backend 
+    istio: monitor
+  
+  image:
+    repository: AATT_DOCKERHUB_USERNAME/meme-web-backend # This value was modified by the initial-setup python script
+
+vpcId: # This value was modified by the deploy-infra pipeline
+subnetId: # This value was modified by the deploy-infra pipeline
+# securityGroupId: sg-0b7bab67c05dab563
+
+region: AATT_AWS_REGION # This value was modified by the initial-setup python script
+
+# This doesn't work in objects of kind Resource. It only works in objects of kind Component.
+# elasticache:
+#   annotations:
+#     backstage.io/kubernetes-id: meme-web-elasticache 

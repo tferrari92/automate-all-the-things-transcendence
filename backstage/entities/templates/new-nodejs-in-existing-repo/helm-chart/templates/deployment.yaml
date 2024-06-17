@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-deployment
+  labels:
+    {{- range $key, $value := .Values.deployment.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      {{- range $key, $value := .Values.deployment.labels }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- range $key, $value := .Values.deployment.labels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}
+          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+          ports:
+            - containerPort: 3000

@@ -1,0 +1,216 @@
+## Argo Configs
+configs:
+  # General Argo CD configuration
+  params:
+    ## Server properties
+    # -- Run server without TLS
+    server.insecure: true
+
+  cm:
+    # -- Timeout to discover if a new manifests version got published to the repository
+    # timeout.reconciliation: 30s
+    # -- Timeout to refresh application data as well as target manifests cache
+    # timeout.hard.reconciliation: 30s
+
+    # Create accounts
+    accounts.backstage-service-account: apiKey, login
+    accounts.frontend: apiKey, login
+    accounts.backend: apiKey, login
+    accounts.database: apiKey, login
+
+
+    # This is to make Sync Waves work in the App of Apps pattern (https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/1.7-1.8/#health-assessment-of-argoprojioapplication-crd-has-been-removed)
+    resource.customizations.health.argoproj.io_Application: |
+      hs = {}
+      hs.status = "Progressing"
+      hs.message = ""
+      if obj.status ~= nil then
+        if obj.status.health ~= nil then
+          hs.status = obj.status.health.status
+          if obj.status.health.message ~= nil then
+            hs.message = obj.status.health.message
+          end
+        end
+      end
+      return hs
+
+
+    # This is for Crossplane. See: https://docs.crossplane.io/latest/guides/crossplane-with-argo-cd/
+    application.resourceTrackingMethod: annotation
+    resource.customizations: |
+      "*.upbound.io/*":
+        health.lua: |
+          health_status = {
+            status = "Progressing",
+            message = "Provisioning ..."
+          }
+
+          local function contains (table, val)
+            for i, v in ipairs(table) do
+              if v == val then
+                return true
+              end
+            end
+            return false
+          end
+
+          local has_no_status = {
+            "ProviderConfig",
+            "ProviderConfigUsage"
+          }
+
+          if obj.status == nil or next(obj.status) == nil and contains(has_no_status, obj.kind) then
+            health_status.status = "Healthy"
+            health_status.message = "Resource is up-to-date."
+            return health_status
+          end
+
+          if obj.status == nil or next(obj.status) == nil or obj.status.conditions == nil then
+            if obj.kind == "ProviderConfig" and obj.status.users ~= nil then
+              health_status.status = "Healthy"
+              health_status.message = "Resource is in use."
+              return health_status
+            end
+            return health_status
+          end
+
+          for i, condition in ipairs(obj.status.conditions) do
+            if condition.type == "LastAsyncOperation" then
+              if condition.status == "False" then
+                health_status.status = "Degraded"
+                health_status.message = condition.message
+                return health_status
+              end
+            end
+
+            if condition.type == "Synced" then
+              if condition.status == "False" then
+                health_status.status = "Degraded"
+                health_status.message = condition.message
+                return health_status
+              end
+            end
+
+            if condition.type == "Ready" then
+              if condition.status == "True" then
+                health_status.status = "Healthy"
+                health_status.message = "Resource is up-to-date."
+                return health_status
+              end
+            end
+          end
+
+          return health_status
+
+      "*.crossplane.io/*":
+        health.lua: |
+          health_status = {
+            status = "Progressing",
+            message = "Provisioning ..."
+          }
+
+          local function contains (table, val)
+            for i, v in ipairs(table) do
+              if v == val then
+                return true
+              end
+            end
+            return false
+          end
+
+          local has_no_status = {
+            "Composition",
+            "CompositionRevision",
+            "DeploymentRuntimeConfig",
+            "ControllerConfig",
+            "ProviderConfig",
+            "ProviderConfigUsage"
+          }
+          if obj.status == nil or next(obj.status) == nil and contains(has_no_status, obj.kind) then
+              health_status.status = "Healthy"
+              health_status.message = "Resource is up-to-date."
+            return health_status
+          end
+
+          if obj.status == nil or next(obj.status) == nil or obj.status.conditions == nil then
+            if obj.kind == "ProviderConfig" and obj.status.users ~= nil then
+              health_status.status = "Healthy"
+              health_status.message = "Resource is in use."
+              return health_status
+            end
+            return health_status
+          end
+
+          for i, condition in ipairs(obj.status.conditions) do
+            if condition.type == "LastAsyncOperation" then
+              if condition.status == "False" then
+                health_status.status = "Degraded"
+                health_status.message = condition.message
+                return health_status
+              end
+            end
+
+            if condition.type == "Synced" then
+              if condition.status == "False" then
+                health_status.status = "Degraded"
+                health_status.message = condition.message
+                return health_status
+              end
+            end
+
+            if contains({"Ready", "Healthy", "Offered", "Established"}, condition.type) then
+              if condition.status == "True" then
+                health_status.status = "Healthy"
+                health_status.message = "Resource is up-to-date."
+                return health_status
+              end
+            end
+          end
+
+          return health_status  
+    resource.exclusions: |
+      - apiGroups:
+        - "*"
+        kinds:
+        - ProviderConfigUsage   
+
+
+  rbac:
+    # Assing roles to accounts
+    policy.csv: |
+      g, backstage-service-account, role:readonly
+      g, frontend, role:readonly
+      g, backend, role:readonly
+      g, database, role:readonly
+
+  secret:
+    ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
+    ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
+    # argocdServerAdminPassword: '$2a$10$0vz/zfXVeaLyOZkGQO6tgO15gOSf6P.zCpsLvJ8slkrOQe.Wq42W.' # admin
+
+    extra:
+      ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
+      ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
+      accounts.backstage-service-account.password: '$2a$10$dcoQrqTuhzk4VTLpehzmjOL29zSba8w/08rLGbiXiqbYGGEZMYJBu' # backstage
+      accounts.frontend.password: '$2a$10$LldyQmOa7/KCtnB4uyeA4.lBXJScLWyUCmS5MSebZpPXgJXLE9bye' # frontend
+      accounts.backend.password: '$2a$10$IaI7yXLoWiQ.XlzZmAUxFOhEWgK8Fm21bZ/vtUBufK9yZnt7EUsri' # backend
+      accounts.database.password: '$2a$10$4NRIsDFel0OaYPy9bAgedeycShVrK2kTNUap4TzHoFm1bUpjuE/z2' # database
+      
+
+## Server
+server:
+  ingress:
+    # -- Enable an ingress resource for the Argo CD server
+    enabled: true
+    # -- Additional ingress annotations
+    annotations:
+      kubernetes.io/ingress.class: alb
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+      alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+      alb.ingress.kubernetes.io/healthcheck-interval-seconds: '15'
+      alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+      alb.ingress.kubernetes.io/success-codes: '200'
+      alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+      alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'

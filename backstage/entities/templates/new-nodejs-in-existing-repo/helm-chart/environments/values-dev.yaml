@@ -1,0 +1,8 @@
+environment: dev
+    
+deployment:
+  image:  
+    tag: 
+  replicas: 1
+  labels:
+    full-name: ${{ values.system }}-${{ values.service }}-dev

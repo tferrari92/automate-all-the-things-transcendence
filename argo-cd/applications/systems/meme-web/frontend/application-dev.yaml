@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: meme-web-frontend-dev 
+  namespace: argocd
+  labels:
+    system-service: meme-web-frontend # This is for Backstage ArgoCD plugin 
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # Adding the finalizer enables cascading deletes when implementing the App of Apps pattern. If this isn't used, when you remove the application yaml from git, the application will be removed from ArgoCD but the resources will remain active in the cluster
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  destination:
+    namespace: meme-web-dev 
+    server: https://kubernetes.default.svc
+  project: meme-web
+  source:
+    path: helm-charts/systems/meme-web/frontend
+    helm:
+      valueFiles:
+        - environments/values-dev.yaml
+    repoURL: https://github.com/AATT_DOCKERHUB_USERNAME/automate-all-the-things-transcendence.git 
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        istio-injection: enabled

@@ -1,0 +1,127 @@
+name: 02-Deploy ArgoCD
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["01-Deploy AWS infrastructure"]
+    types:
+      - completed
+
+env:
+  AWS_REGION: AATT_AWS_REGION # This value was modified by the initial-setup python script
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  PROJECT: AATT_PROJECT_NAME # This value was modified by the initial-setup python script
+  SYSTEM: meme-web
+
+jobs:
+  deploy-argocd:
+    runs-on: ubuntu-latest
+    # Run only if the previous workflow was successful or if its a manual trigger
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # - name: Install kubectl & helm
+      #   uses: yokawasa/action-setup-kube-tools@v0.11.1
+      #   with:
+      #     kubectl: '1.28.2'
+      #     helm: '3.11.2'
+
+      - name: Configure kubeconfig
+        run: aws eks --region $AWS_REGION update-kubeconfig --name $PROJECT-cluster
+
+      - name: Deploy ArgoCD
+        run: helm install argocd -n argocd helm-charts/infra/argo-cd --values helm-charts/infra/argo-cd/values-custom.yaml --dependency-update --create-namespace
+
+      # This deploys the necessary resources for ArgoCD to be able to manage itslef
+      - name: Make ArgoCD self-managed & implemente App of Apps pattern
+        run: |    
+          # We first create an ArgoCD AppProject called "argocd" where all ArgoCD self-managment resources will exist.
+          kubectl create -n argocd -f argo-cd/self-manage/appprojects/argocd-appproject.yaml  
+
+          # Then we create an application that will automatically deploy any ArgoCD AppProjects we specify in the argo-cd/self-manage/appprojects/ directory.
+          kubectl create -n argocd -f argo-cd/self-manage/argocd-app-of-projects-application.yaml  
+          
+          # Then we create an application that will monitor the helm-charts/infra/argocd directory, the same we used to deploy ArgoCD, making ArgoCD self-managed. Any changes we apply in the helm-charts/infra/argocd directory will be automatically applied.
+          kubectl create -n argocd -f argo-cd/self-manage/argocd-application.yaml  
+
+          # Finally, we create an application that will automatically deploy any ArgoCD Applications we specify in the argo-cd/applications directory (App of Apps pattern).
+          kubectl create -n argocd -f argo-cd/self-manage/argocd-app-of-apps-application.yaml  
+
+          # Quick access to ArgoCD UI.
+          until kubectl -n argocd get secret argocd-initial-admin-secret &> /dev/null; do
+            echo "Waiting for secret 'argocd-initial-admin-secret' to be available..."
+            sleep 3
+          done
+          
+          echo "###############################################"          
+          echo "###############################################"          
+          echo "###############################################"          
+          echo "URL: http://$(kubectl get ingress -n argocd -o jsonpath='{.items[*].status.loadBalancer.ingress[0].hostname}')"          
+          echo "Username: admin"
+          echo "Password: $(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)"
+          echo "###############################################"          
+          echo "###############################################"          
+          echo "###############################################"   
+          
+      - name: Get meme-web frontend endpoint
+        run : |
+          while [[ $(kubectl get -n service-mesh service istio-gateway -o 'jsonpath={.status.loadBalancer.ingress[0].hostname}') == '' ]]; do
+            echo "Istio Gateway is not ready. Checking again in 5 seconds..."
+            sleep 5
+          done
+          kubectl get -n service-mesh service istio-gateway -o=jsonpath="{.status.loadBalancer.ingress[].hostname}{'\n'}" > host_endpoint.txt
+
+      - name: Modify values
+        if: ${{ always() }}
+        run: |
+          sed -i "s/host:.*/host: $(cat host_endpoint.txt | tr -d '\n') # This value was modified by the deploy-argocd pipeline/g" helm-charts/systems/$SYSTEM/frontend/values.yaml    
+
+      - name: Commit changes to GitHub
+        run: |
+          git pull
+          git config --global user.email "GitHubActions@DeployArgoCDWorkflow.com"
+          git config --global user.name "GitHub Actions - Deploy ArgoCD Workflow"
+          git add helm-charts/systems/$SYSTEM/frontend/values.yaml
+          git commit -m "Frontend hosts URLs updated by GitHub Actions"
+          git push
+
+      - name: 'Save frontend endpoints'
+        run: |
+          echo "DEV:" > frontend_endpoints.txt
+          echo "$(cat host_endpoint.txt)/dev/" >> frontend_endpoints.txt
+          echo " " >> frontend_endpoints.txt
+          echo "STAGE:" >> frontend_endpoints.txt
+          echo "$(cat host_endpoint.txt)/stage/" >> frontend_endpoints.txt
+          echo " " >> frontend_endpoints.txt
+          echo "PROD:" >> frontend_endpoints.txt
+          echo "$(cat host_endpoint.txt)/" >> frontend_endpoints.txt
+
+      - name: Publish frontend endpoints
+        uses: actions/upload-artifact@v4
+        with:
+          name: meme-web-frontend-endpoints
+          path: frontend_endpoints.txt
+
+      - name: 'Save ArgoCD credentials'
+        run: |
+          while [[ $(kubectl get ingress -n argocd $(kubectl get ingress -n argocd | awk 'NR>1{print $1}') -o 'jsonpath={.status.loadBalancer.ingress[0].hostname}') == '' ]]; do
+            echo "Ingress is not ready. Checking again in 5 seconds..."
+            sleep 5
+          done
+          kubectl get ingress -n argocd $(kubectl get ingress -n argocd | awk 'NR>1{print $1}') -o=jsonpath="{'http://'}{.status.loadBalancer.ingress[].hostname}{'\n'}" > argocd-access.txt
+          echo "admin" >> argocd-access.txt
+          while [[ $(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}") == '' ]]; do
+            echo "Secret is not ready. Checking again in 5 seconds..."
+            sleep 5
+          done
+          echo $(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d) >> argocd-access.txt
+
+      - name: Publish ArgoCD credentials
+        uses: actions/upload-artifact@v4
+        with:
+          name: argocd-access
+          path: argocd-access.txt

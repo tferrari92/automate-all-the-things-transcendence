@@ -1,0 +1,127 @@
+app:
+  # Should be the same as backend.baseUrl when using the `app-backend` plugin.
+  title: Automate All The Things
+  # baseUrl: http://localhost:7007
+  baseUrl: http://k8s-backstag-backstag-e78a25dae5-1266101946.us-east-1.elb.amazonaws.com # Don't use final slash "/".  # This needs to be modified with the actual URL Backstage gets once it's deployed in EKS
+
+organization:
+  name: Automate All The Things
+
+backend:
+
+  baseUrl: http://k8s-backstag-backstag-e78a25dae5-1266101946.us-east-1.elb.amazonaws.com # Don't use final slash "/".  # This needs to be modified with the actual URL Backstage gets once it's deployed in EKS
+ 
+  # This is because when running in K8S, profile images of users don't load. We get error: 
+  # Refused to load the image 'https://i.imgur.com/LWGqYi2.jpg' because it violates the following Content Security Policy directive: "img-src 'self' data:".
+  # See: https://john-tucker.medium.com/backstage-by-example-part-3-5a1efec3bcb1
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
+    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
+    img-src: ["'self'", 'data:', 'https://i.imgur.com', 'https://avatars.githubusercontent.com']
+    frame-src: ["'self'", 'http://localhost:8082'] # This allows the iframe to load the Grafana dashboards (when Grafana service is port-forwarded to localhost:8082)
+    
+    # Since we are not using HTTPS we require this. Without it backend resources will not load in the UI when accesing through the ingress. See: https://github.com/backstage/backstage/issues/23247#issuecomment-1971454432
+    upgrade-insecure-requests: false 
+
+  # cors:
+  #   origin: http://k8s-backstag-backstag-e78a25dae5-368143972.us-east-1.elb.amazonaws.com
+  #   methods: [GET, POST, PUT, DELETE]
+  #   credentials: true
+  # reading:
+  #   allow:
+  #     - host: example.org
+
+  # Note that the baseUrl should be the URL that the browser and other clients
+  # should use when communicating with the backend, i.e. it needs to be
+  # reachable not just from within the backend host, but from all of your
+  # callers. When its value is "http://localhost:7007", it's strictly private
+  # and can't be reached by others.
+  # baseUrl: http://localhost:7007
+
+  # The listener can also be expressed as a single <host>:<port> string. In this case we bind to
+  # all interfaces, the most permissive setting. The right value depends on your specific deployment.
+  listen:
+    port: 7007
+
+  # config options: https://node-postgres.com/api/client
+  database:
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      # https://node-postgres.com/features/ssl
+      # you can set the sslmode configuration option via the `PGSSLMODE` environment variable
+      # see https://www.postgresql.org/docs/current/libpq-ssl.html Table 33.1. SSL Mode Descriptions (e.g. require)
+      # ssl:
+      #   ca: # if you have a CA file and want to verify it you can uncomment this section
+      #     $file: <file-path>/ca/server.crt
+
+auth:
+  # see https://backstage.io/docs/auth/ to learn about auth providers
+  allowGuestAccess: true
+  providers:
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        
+integrations:
+  github:
+    - host: github.com
+      # This is a Personal Access Token or PAT from GitHub. You can find out how to generate this token, and more information
+      # about setting up the GitHub integration here: https://backstage.io/docs/getting-started/configuration#setting-up-a-github-integration
+      token: ${GITHUB_TOKEN}
+
+techdocs:
+  builder: 'local' # Alternatives - 'external'
+  generator:
+    runIn: 'local' # We use local in porduction because it fails with "docker" when runnin in minikube.
+  publisher:
+    type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+
+kubernetes:
+  serviceLocatorMethod:
+    type: 'multiTenant'
+  clusterLocatorMethods:
+    - type: 'config'
+      clusters:
+        - url: kubernetes.default.svc.cluster.local:443
+          name: local
+          authProvider: 'serviceAccount'
+          skipTLSVerify: false
+          skipMetricsLookup: true
+
+proxy:
+  '/argocd/api':
+    target: http://argocd-server.argocd.svc.cluster.local/api/v1/
+    changeOrigin: true
+    # only if your argocd api has self-signed cert
+    secure: false
+    headers:
+      Cookie:
+        $env: ARGOCD_AUTH_TOKEN
+
+  '/grafana/api':
+    # May be a public or an internal DNS
+    target: http://grafana.observability.svc.cluster.local/
+    changeOrigin: true
+    secure: false
+    headers:
+      Authorization: Bearer ${GRAFANA_TOKEN}
+
+# Optional: this will link to your argoCD web UI for each argoCD application
+argocd:
+  baseUrl: http://k8s-argocd-argocdse-78505fa7ec-789492455.us-east-1.elb.amazonaws.com/ # This needs to be modified with the actual URL Backstage gets once it's deployed in EKS. Don't specify port.
+
+grafana:
+  domain: http://k8s-observab-grafana-7393625f9e-428112153.us-east-1.elb.amazonaws.com # Don't use final slash "/". Links will fail if you do. This needs to be modified with the actual URL Backstage gets once it's deployed in EKS. Don't specify port.
+
+  
+##########################################################################################
+# The Catalog configuration will be passed through a ConfigMap when deployed to Kubernetes.
+# Check the values-custom.yaml file in the Backstage helm-chart.
+
+

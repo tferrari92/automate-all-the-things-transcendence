@@ -1,0 +1,55 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroup
+metadata:
+  name: ${{ values.system}}-${{ values.name }}-securitygroup
+spec:
+  forProvider:
+    description: Allow TLS inbound traffic
+    name: ${{ values.system}}-${{ values.name }}-securitygroup
+    region: ${{ values.region }}
+    vpcIdRef: 
+      name: ${{ values.system}}-${{ values.name }}-vpc
+    tags:
+      Name: ${{ values.system}}-${{ values.name }}-securitygroup
+  providerConfigRef:
+    name: aws
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupRule
+metadata:
+  name: ${{ values.system}}-${{ values.name }}-securitygrouprule-1
+spec:
+  forProvider:
+    cidrBlocks:
+      - 0.0.0.0/0
+    fromPort: 0
+    protocol: "-1"
+    region: ${{ values.region }}
+    securityGroupIdRef:
+      name: ${{ values.system}}-${{ values.name }}-securitygroup
+    toPort: 0
+    type: ingress
+    tags:
+      Name: ${{ values.system}}-${{ values.name }}-securitygrouprule-1
+  providerConfigRef:
+    name: aws
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupRule
+metadata:
+  name: ${{ values.system}}-${{ values.name }}-securitygrouprule-2
+spec:
+  forProvider:
+    cidrBlocks:
+      - 0.0.0.0/0
+    fromPort: 0
+    protocol: "-1"
+    region: ${{ values.region }}
+    securityGroupIdRef:
+      name: ${{ values.system}}-${{ values.name }}-securitygroup
+    toPort: 0
+    type: egress
+    tags:
+      Name: ${{ values.system}}-${{ values.name }}-securitygrouprule-2
+  providerConfigRef:
+    name: aws

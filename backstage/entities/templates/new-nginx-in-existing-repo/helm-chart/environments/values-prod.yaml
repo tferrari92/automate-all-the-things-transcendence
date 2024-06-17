@@ -1,0 +1,14 @@
+environment: prod
+
+deployment:
+  image:  
+    tag: 
+  replicas: 1
+  labels:
+    full-name: ${{ values.system }}-${{ values.service }}-prod
+
+configmap: 
+  nginxConf: |-
+      location /api {
+          proxy_pass http://${{ values.system }}-backend-prod-service:3000/;
+      }

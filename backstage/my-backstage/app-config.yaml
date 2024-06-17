@@ -1,0 +1,229 @@
+app:
+  # Should be the same as backend.baseUrl when using the `app-backend` plugin.
+  title: Automate All The Things
+  baseUrl: http://localhost:3000
+
+organization:
+  name: Automate All The Things
+
+backend:
+  # Used for enabling authentication, secret is shared by all backend plugins
+  # See https://backstage.io/docs/auth/service-to-service-auth for
+  # information on the format
+  # auth:
+  #   keys:
+  #     - secret: ${BACKEND_SECRET}
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+    # Uncomment the following host directive to bind to specific interfaces
+    # host: 127.0.0.1
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
+    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
+  cors:
+    origin: http://localhost:3000
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  # This is for local development only, it is not recommended to use this in production
+  # The production database configuration is stored in app-config.production.yaml
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+
+integrations:
+  github:
+    - host: github.com
+      # This is a Personal Access Token or PAT from GitHub. You can find out how to generate this token, and more information
+      # about setting up the GitHub integration here: https://backstage.io/docs/getting-started/configuration#setting-up-a-github-integration
+      token: ${GITHUB_TOKEN}
+    ### Example for how to add your GitHub Enterprise instance using the API:
+    # - host: ghe.example.net
+    #   apiBaseUrl: https://ghe.example.net/api/v3
+    #   token: ${GHE_TOKEN}
+
+proxy:
+  ### Example for how to add a proxy endpoint for the frontend.
+  ### A typical reason to do this is to handle HTTPS and CORS for internal services.
+  # endpoints:
+  #   '/test':
+  #     target: 'https://example.com'
+  #     changeOrigin: true
+
+  # This will only work if you already have a ArgoCD running in Minikube and have port-forwarded it to localhost:8081
+  # You will also need to generate a token in ArgoCD for the backstage-service-account user.
+  # This token must be set in the ARGOCD_AUTH_TOKEN environment variable before runninf 'yarn dev'
+  '/argocd/api':
+    target: http://localhost:8081/api/v1/
+    changeOrigin: true
+    # only if your argocd api has self-signed cert
+    secure: false
+    headers:
+      Cookie:
+        $env: ARGOCD_AUTH_TOKEN
+
+  '/grafana/api':
+    # May be a public or an internal DNS
+    target: http://localhost:8082/
+    changeOrigin: true
+    secure: false
+    headers:
+      Authorization: Bearer ${GRAFANA_TOKEN}
+
+# Optional: this will link to your argoCD web UI for each argoCD application
+argocd:
+  baseUrl: http://localhost:8081/
+
+grafana:
+  domain: http://localhost:8082 # Don't use final slash "/". Links will fail if you do
+
+  # Is unified alerting enabled in Grafana?
+  # See: https://grafana.com/blog/2021/06/14/the-new-unified-alerting-system-for-grafana-everything-you-need-to-know/
+  # Optional. Default: false
+  unifiedAlerting: false
+
+
+# Reference documentation http://backstage.io/docs/features/techdocs/configuration
+# Note: After experimenting with basic setup, use CI/CD to generate docs
+# and an external cloud storage when deploying TechDocs for production use-case.
+# https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
+techdocs:
+  builder: 'local' # Alternatives - 'external'
+  generator:
+    runIn: 'docker' # Alternatives - 'local'
+  publisher:
+    type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+
+auth:
+  # see https://backstage.io/docs/auth/ to learn about auth providers
+  providers:
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+
+scaffolder:
+  # see https://backstage.io/docs/features/software-templates/configuration for software template options
+
+kubernetes:
+  serviceLocatorMethod:
+    type: 'multiTenant'
+  clusterLocatorMethods:
+    - type: 'config'
+      clusters:
+        - url: kubernetes.default.svc.cluster.local:443
+          name: local
+          authProvider: 'serviceAccount'
+          skipTLSVerify: false
+          skipMetricsLookup: true
+
+catalog:
+  rules:
+    - allow:
+        - Component
+        - API
+        - Resource
+        - System
+        - Domain
+        - Location
+        - User
+        - Group
+        - Template
+
+  refreshIntervalSeconds: 5 # In seconds. Default is 100
+
+  providers:
+    github:
+
+      # Use this if new services are created in their own repositories
+      # catalogsProvider:
+      #   organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+      #   catalogPath: '/catalog-info.yaml' # string
+      #   filters:
+      #     branch: 'main' # string
+      #     repository: '.*' # Regex
+      #   schedule: # same options as in TaskScheduleDefinition
+      #     frequency: { minutes: 30 }
+      #     timeout: { minutes: 3 }
+
+      # Catalogs
+      catalogsProvider:
+        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        catalogPath: '/application-code/**/*catalog-info.yaml' # this will search all folders for files that end in template.yaml
+        filters:
+          branch: 'main' # string
+          repository: 'automate-all-the-things-transcendence' # Regex
+        schedule: # same options as in TaskScheduleDefinition
+          frequency: { minutes: 1 }
+          timeout: { minutes: 3 }
+
+      # Resources
+      resourcesProvider:
+        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        catalogPath: '/helm-charts/infra/crossplane-managed-resources/**/*catalog-info.yaml' # this will search all folders for files that end in template.yaml
+        # catalogPath: '/application-code/**/*catalog-info.yaml' # this will search all folders for files that end in template.yaml
+        filters:
+          branch: 'main' # string
+          repository: 'automate-all-the-things-transcendence' # Regex
+        schedule: # same options as in TaskScheduleDefinition
+          frequency: { minutes: 1 }
+          timeout: { minutes: 3 }
+
+      # APIs
+      apisProvider:
+        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        catalogPath: '/application-code/**/*api-info.yaml' # this will search all folders for files that end in template.yaml
+        filters:
+          branch: 'main' # string
+          repository: 'automate-all-the-things-transcendence' # Regex
+        schedule: # same options as in TaskScheduleDefinition
+          frequency: { minutes: 1 }
+          timeout: { minutes: 3 }
+
+      # Templates
+      templatesProvider:
+        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        catalogPath: '/backstage/entities/templates/**/*template.yaml' # this will search all folders for files that end in template.yaml
+        filters:
+          branch: 'main' # string
+          repository: 'automate-all-the-things-transcendence' # Regex
+        schedule: # same options as in TaskScheduleDefinition
+          frequency: { minutes: 1 }
+          timeout: { minutes: 3 }
+
+      # Systems
+      systemsProvider:
+        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        catalogPath: '/backstage/entities/systems/**/*.yaml' # this will search all folders for files that end in .yaml
+        filters:
+          branch: 'main' # string
+          repository: 'automate-all-the-things-transcendence' # Regex
+        schedule: # same options as in TaskScheduleDefinition
+          frequency: { minutes: 1 }
+          timeout: { minutes: 3 }
+
+      # Groups
+      groupsProvider:
+        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        catalogPath: '/backstage/entities/groups/**/*.yaml' # this will search all folders for files that end in .yaml
+        filters: # optional filters
+          branch: 'main' # optional string
+          repository: 'automate-all-the-things-transcendence' # optional Regex
+        schedule: # same options as in TaskScheduleDefinition
+          frequency: { minutes: 1 }
+          timeout: { minutes: 3 }
+
+      # Users
+      usersProvider:
+        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        catalogPath: '/backstage/entities/users/**/*.yaml' # this will search all folders for files that end in .yaml
+        filters: # optional filters
+          branch: 'main' # optional string
+          repository: 'automate-all-the-things-transcendence' # optional Regex
+        schedule: # same options as in TaskScheduleDefinition
+          frequency: { minutes: 1 }
+          timeout: { minutes: 3 }
+
+

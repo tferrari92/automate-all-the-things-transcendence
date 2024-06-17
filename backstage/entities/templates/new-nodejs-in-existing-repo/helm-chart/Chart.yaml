@@ -1,0 +1,4 @@
+apiVersion: v2
+name: ${{ values.system }}-${{ values.service }}
+description: A Helm chart for deploying ${{ values.system }}-${{ values.service }}
+version: 1.0

@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ${{ values.system }}-${{ values.name }}-eks-cluster
+  description: ${{ values.name }} eks cluster for the ${{ values.system }} system
+  tags:
+    - aws 
+    - eks
+spec:
+  type: kubernetes-cluster
+  lifecycle: experimental
+  owner: ${{ values.owner }}
+  system: ${{ values.system }}

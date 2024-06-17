@@ -1,0 +1,16 @@
+apiVersion: elasticache.aws.upbound.io/v1beta1
+kind: SubnetGroup
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-elasticache-subnet-group
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  forProvider:
+    region: {{ .Values.region }}
+    subnetIds:
+      - {{ .Values.subnetId }} # Private subnet in Availability Zone C (created by Terraform)
+    tags:
+      Name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-elasticache-subnet-group
+  providerConfigRef:
+    name: aws
+

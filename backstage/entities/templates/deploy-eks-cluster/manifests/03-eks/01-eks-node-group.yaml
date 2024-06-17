@@ -1,0 +1,25 @@
+apiVersion: eks.aws.upbound.io/v1beta1
+kind: NodeGroup
+metadata:
+  name: ${{ values.system}}-${{ values.name }}-eks-ng
+spec:
+  forProvider:
+    clusterNameRef:
+      name: ${{ values.system}}-${{ values.name }}-eks-cluster
+    nodeRoleArnRef:
+      name: ${{ values.system}}-${{ values.name }}-eks-ng-role
+    region: ${{ values.region }}
+    scalingConfig:
+      - desiredSize: 1
+        maxSize: 1
+        minSize: 1
+    subnetIdRefs:
+      - name: ${{ values.system}}-${{ values.name }}-private-subnet-b
+      - name: ${{ values.system}}-${{ values.name }}-private-subnet-c
+    instanceTypes:
+      - t3.nano
+    diskSize: 5
+    tags:
+      Name: ${{ values.system}}-${{ values.name }}-eks-ng
+  providerConfigRef:
+    name: aws

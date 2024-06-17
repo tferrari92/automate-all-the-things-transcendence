@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: prueba-team
+  title: prueba-team
+  description: fgdfghdfgsdfg
+spec:
+  type: team
+  children: []
+  profile:
+    email: admin@admin.com
+    # slack: 

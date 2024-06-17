@@ -1,0 +1,18 @@
+environment: dev
+
+deployment:
+  image:
+    tag: 6
+  replicas: 1
+  labels:
+    full-name: meme-web-frontend-dev
+
+configmap: 
+  nginxConf: |-
+    location /api {
+        # Now that we use Istio, we need to specify the http version to 1.1 for it to work (https://www.reddit.com/r/devops/comments/k0ooaw/envoy_426_http_issue/)
+        proxy_http_version 1.1;
+
+        # In other environments we use "meme-web-backend-dev-deployment" because this is the name that gets automatically assigned to the service by the Flagger canary. In this case we can choose the name, so we'll use "meme-web-backend-dev-service"
+        proxy_pass http://meme-web-backend-dev-service:3000/; 
+    }

@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-gateway
+spec:
+  selector:
+    istio: gateway
+  servers:
+    - port:
+        number: {{ .Values.port }}
+        name: http
+        protocol: HTTP
+      hosts:
+        - {{ .Values.host }} # Istio Gateway service external IP
+    #     - {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}.tferrari.com # I leave this as an example if you have your own domain
+    # - port:
+    #     number: 443
+    #     name: https
+    #     protocol: HTTPS
+    #   hosts:
+    #     - {{ .Values.host }} # Istio Gateway service external IP
+    #     # - {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}.tferrari.com # I leave this as an example if you have your own domain
+    #   tls:
+    #     credentialName: {{ .Values.system }}-{{ .Values.environment }}-tferrari-com-crt # QUE ES ESTO???
+    #     mode: SIMPLE

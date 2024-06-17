@@ -1,0 +1,107 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: new-backstage-user
+  title: New Backstage User
+  description: Create new Backstage user
+  tags:
+    - backstage
+spec:
+  owner: web@example.com
+  type: component
+  parameters:
+
+    ###############################################################################################################
+    # First page
+    - title: Provide some simple information
+      required:
+        - name
+        - lastName
+        - email
+        - group
+        - pictureURL
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Name of the new user
+          ui:field: EntityNamePicker
+
+        lastName:
+          title: Last Name
+          type: string
+          description: Last name of the new user
+          ui:field: EntityNamePicker
+
+        email:
+          title: Email
+          type: string
+          pattern: ^\S+@\S+\.\S+$
+          description: Email of the new group
+
+        pictureURL:
+          title: Profile picutre
+          type: string
+          description: URL to the profile picture of the new user
+
+        group:
+          title: Group
+          type: string
+          description: Group this user belongs to
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter: # This uses the value "group:default/meme-web-team"
+              - kind: Group
+
+    ###############################################################################################################
+    # Second page
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            # allowedOrganizations: # This doesn't get displayed as a dropdown list like allowedRepos does, IDK why.
+            #   - AATT_DOCKERHUB_USERNAME
+            #   - AATT_DOCKERHUB_USERNAME
+            allowedRepos:
+              - automate-all-the-things-braindamage
+              - automate-all-the-things-transcendence
+              - automate-all-the-things-nirvana
+              - automate-all-the-things-almighty
+
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          lastName: ${{ parameters.lastName }}
+          email: ${{ parameters.email }}
+          group: ${{ parameters.group | replace('group:default/', '') }}
+          pictureURL: ${{ parameters.pictureURL }}
+
+    - id: publish
+      name: Publish
+      action: publish:github:pull-request
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        title: "Create new user: ${{ parameters.name }} ${{ parameters.lastName }}"
+        branchName: create-user-${{parameters.name | lower }}-${{parameters.lastName | lower }}
+        description: |
+          # New user: ${{ parameters.name }} ${{ parameters.lastName }}
+        targetPath: backstage/entities/users
+
+        
+  output:
+    links:
+      - url: ${{ steps.publish.output.remoteUrl }}
+        title: "Go to PR"

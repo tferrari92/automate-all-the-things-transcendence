@@ -1,0 +1,9 @@
+site_name: meme-web-frontend documentation
+nav:
+  - Home: index.md
+  - Deployment: deployment.md
+theme:
+  name: 'material'
+plugins:
+  - search
+docs_dir: 'docs'

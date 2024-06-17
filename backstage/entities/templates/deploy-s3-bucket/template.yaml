@@ -1,0 +1,127 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: deploy-s3-bucket
+  title: Deploy New S3 Bucket
+  description: Creates all the neccesary resources in AWS for deploying an S3 bucket.
+  tags:
+    - aws
+    - s3
+spec:
+  owner: web@example.com
+  type: service
+  parameters:
+
+    ###############################################################################################################
+    # First page
+    - title: Provide some simple information
+      required:
+        - system
+        - name
+        - description
+        - owner
+      properties:
+        system:
+          title: System
+          type: string
+          description: System the new S3 bucket belongs to.
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              - kind: System
+            defaultKind: System # Necessary for options to show as "system-name" and not "default/system-name"
+
+        name:
+          title: Name
+          type: string
+          description: Unique name of the new S3 bucket.
+          ui:field: EntityNamePicker
+          pattern: '^[a-z0-9-]+$' # Only lowercase letters, numbers and hyphens
+          maxLength: 30
+          ui:help: 'Use only lowercase letters, numbers and hyphens. Max length: 30 characters.'  
+
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this bucket is for.
+          minLength: 10
+          ui:help: 'Make it descriptive! At least 10 characters.'
+
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the resource.
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter: # This uses the value "group:default/meme-web-team"
+              - kind: Group
+                # spec.type: team # You can make it more specific by adding more filters like this
+
+    ###############################################################################################################
+    # Second page
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            # allowedOrganizations: # This doesn't get displayed as a dropdown list like allowedRepos does, IDK why.
+            #   - AATT_DOCKERHUB_USERNAME
+            #   - AATT_DOCKERHUB_USERNAME
+            allowedRepos:
+              - automate-all-the-things-braindamage
+              - automate-all-the-things-transcendence
+              - automate-all-the-things-nirvana
+              - automate-all-the-things-almighty
+
+  steps:
+    - id: fetch-manifests
+      name: Fetch Manifests
+      action: fetch:template
+      input:
+        url: ./manifests
+        targetPath: helm-charts/infra/crossplane-managed-resources/s3-buckets/${{ parameters.system | replace('system:default/', '') }}-${{ parameters.name }}-s3-bucket
+        values:
+          system: ${{ parameters.system | replace('system:default/', '') }}
+          name: ${{ parameters.name }}
+
+    - id: fetch-catalog-info
+      name: Fetch Catalog Info
+      action: fetch:template
+      input:
+        url: ./catalog-info
+        targetPath: helm-charts/infra/crossplane-managed-resources/s3-buckets/${{ parameters.system | replace('system:default/', '') }}-${{ parameters.name }}-s3-bucket/backstage
+        values:
+          system: ${{ parameters.system | replace('system:default/', '') }}
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner | replace('group:default/', '') }}
+
+    - id: publish
+      name: Publish
+      action: publish:github:pull-request
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        title: "Create new S3 bucket: ${{ parameters.system | replace('system:default/', '') }}-${{ parameters.name }}"
+        branchName: create-s3-bucket-${{ parameters.system | replace('system:default/', '') }}-${{ parameters.name }}
+        description: |
+          # New S3 Bucket: ${{ parameters.system | replace('system:default/', '') }}-${{ parameters.name }}
+
+          ${{ parameters.description if parameters.description }}
+        targetPath: "" # Leave empty to use the root of the repo or specify if needed
+        # paths: 
+        #   - application-code/${{ parameters.system }}/${{ parameters.name }}
+        #   - helm-charts/systems/${{ parameters.system }}/${{parameters.name}}
+        #   - argo-cd/applications/systems/${{ parameters.system }}/${{ parameters.name }}
+        #   - .github/workflows
+
+
+  output:
+    links:
+      - url: ${{ steps.publish.output.remoteUrl }}
+        title: "Go to PR"

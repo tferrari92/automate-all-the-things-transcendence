@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: kratos
+spec:
+  profile:
+    displayName: Kratos
+    email: kratos@sparta.com
+    picture: https://i.imgur.com/LWGqYi2.jpg
+  memberOf:
+    - meme-web-backend-subteam

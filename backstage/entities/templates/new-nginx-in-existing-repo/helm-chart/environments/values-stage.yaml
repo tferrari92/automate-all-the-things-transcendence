@@ -1,0 +1,14 @@
+environment: stage
+
+deployment:
+  image:  
+    tag: 
+  replicas: 1
+  labels:
+    full-name: ${{ values.system }}-${{ values.service }}-stage
+
+configmap: 
+  nginxConf: |-
+      location /api {
+          proxy_pass http://${{ values.system }}-backend-stage-service:3000/;
+      }

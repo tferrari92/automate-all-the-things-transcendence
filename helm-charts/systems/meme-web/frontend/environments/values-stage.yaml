@@ -1,0 +1,17 @@
+environment: stage
+
+deployment:
+  image:
+    tag: 6
+  replicas: 1
+  labels:
+    full-name: meme-web-frontend-stage
+
+configmap: 
+  nginxConf: |-
+    location /api {
+        # Now that we use Istio, we need to specify the http version to 1.1 for it to work (https://www.reddit.com/r/devops/comments/k0ooaw/envoy_426_http_issue/)
+        proxy_http_version 1.1;
+        
+        proxy_pass http://meme-web-backend-stage-deployment:3000/;
+    }

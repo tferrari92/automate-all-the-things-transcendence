@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: crossplane-providers
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+  # We don't want ProviderConfigs nor Providers nor Crossplane itself to be deleted before all Managed Resources are deleted
+  # So we'll remove the finalizers from all the crossplane-realted applications: crossplane, crossplane-providers & crossplane-provider-configs
+  # These will make it so that the resources created by the applications are not deleted when the applications are deleted, remaining in the cluster until the cluster is destroyed
+  # We usually don't want this but in this case its's necessary.
+  # These resources don't create any Ingresses or PersistentVolumes, so there is no issue with them remaining in the cluster until it's destruction.
+#  finalizers:
+#     - resources-finalizer.argocd.argoproj.io # Adding the finalizer enables cascading deletes when implementing the App of Apps pattern. If this isn't used, when you remove the application yaml from git, the application will be removed from ArgoCD but the resources will remain active in the cluster
+spec:  
+  destination:
+    namespace: crossplane-system
+    server: https://kubernetes.default.svc
+  project: crossplane
+  source:
+    repoURL: https://github.com/AATT_DOCKERHUB_USERNAME/automate-all-the-things-transcendence.git # This value was modified by the initial-setup python script
+    path: helm-charts/infra/crossplane-providers
+    directory:
+      recurse: true
+      jsonnet: {}
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

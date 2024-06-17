@@ -1,0 +1,37 @@
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/links: |
+    - name: support
+      url: https://github.com/backstage/charts/issues
+    - name: Chart Source
+      url: https://github.com/backstage/charts
+    - name: Default Image Source
+      url: https://github.com/backstage/backstage
+apiVersion: v2
+dependencies:
+- name: common
+  repository: https://charts.bitnami.com/bitnami
+  tags:
+  - bitnami-common
+  version: 2.x.x
+- condition: postgresql.enabled
+  name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.x.x
+description: A Helm chart for deploying a Backstage application
+home: https://backstage.io
+icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/backstage/icon/color/backstage-icon-color.svg
+keywords:
+- backstage
+- idp
+kubeVersion: '>= 1.19.0-0'
+maintainers:
+- name: Backstage
+  url: https://backstage.io
+name: backstage
+sources:
+- https://github.com/backstage/charts
+- https://github.com/backstage/backstage
+type: application
+version: 1.8.2

@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: meme-web-team
+  title: meme-web-team
+  description: responsible for maintaining and developing the meme-web system
+  tags:
+    - engineering
+    - infrastructure
+spec:
+  type: team
+  children: []
+  # parent: 
+  # children: 
+  #   - meme-web-redis-subteam
+  #   - meme-web-backend-subteam
+  #   - meme-web-frontend-subteam
+  # members:
+  profile:
+    email: meme-web-team@example.com
+    # slack:

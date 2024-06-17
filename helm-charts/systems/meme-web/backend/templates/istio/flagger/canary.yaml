@@ -1,0 +1,87 @@
+{{- if ne .Values.environment "dev" }} # Do not deploy in dev environment
+apiVersion: flagger.app/v1beta1
+kind: Canary
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-canary
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  # Deployment reference
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-deployment
+  # The maximum time in seconds for the canary deployment to make progress before it is rollback (default 600s)
+  progressDeadlineSeconds: 60
+  service:
+    # Service port number
+    port: {{ .Values.port }}
+    # Container port number or name (optional)
+    # targetPort: 3000
+    # Istio gateways (optional)
+    # gateways:
+    # - {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-gateway # Name of the gateway. Also .<namespace> if gateway is in a separate namespace
+    # Istio virtual service host names (optional)
+    # hosts:
+    # - "*"
+    # # Istio traffic policy (optional)
+    # trafficPolicy:
+    #   tls:
+    #     # Use ISTIO_MUTUAL when mTLS is enabled
+    #     mode: DISABLE
+    # HTTP match conditions (optional)
+    # match:
+    #   - uri:
+    #       prefix: /
+    # # Istio retry policy (optional)
+    # retries:
+    #   attempts: 3
+    #   perTryTimeout: 1s
+    #   retryOn: "gateway-error,connect-failure,refused-stream"
+  analysis:
+    # Schedule interval (default 60s)
+    interval: 60s
+    # Max number of failed metric checks before rollback
+    threshold: 3
+    # Max traffic percentage routed to canary
+    maxWeight: 60
+    # Canary increment step
+    stepWeight: 20
+    metrics:
+    # WE ARE USING THE "latency" MetricTemplate WE MANUALLY CREATED IN THE CHART TEMPLATES -> https://github.com/<your-username>/automate-all-the-things-insane/blob/main/helm/infra/istio/flagger/templates/custom-templates/metrictemplate.yaml (https://docs.flagger.app/dev/upgrade-guide#istio-telemetry-v2)
+    - name: latency
+      templateRef: 
+        name: latency
+        namespace: service-mesh
+      # Latency should be less then 1s
+      thresholdRange:
+        max: 1000
+      interval: 1m
+    # THIS METRIC DOESN'T WORK ANYMORE (https://docs.flagger.app/dev/upgrade-guide#istio-telemetry-v2)
+    # - name: request-success-rate
+    #   # Minimum req success rate (non 5xx responses) percentage
+    #   thresholdRange:
+    #     min: 99
+    #   interval: 1m
+    # THIS METRIC DOESN'T WORK ANYMORE (https://docs.flagger.app/dev/upgrade-guide#istio-telemetry-v2)
+    # - name: request-duration
+    #   # Maximum req duration P99 milliseconds
+    #   thresholdRange:
+    #     max: 250
+    #   interval: 30s
+    # Testing (optional)
+    webhooks:
+      - name: load-test-get
+        url: http://flagger-loadtester.service-mesh/
+        timeout: 5s
+        metadata:
+          cmd: "hey -z 10m -q 10 -c 2 http://{{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-deployment-canary.{{ .Values.system }}-{{ .Values.environment }}:{{ .Values.port }}"
+    #   - name: acceptance-test
+    #     type: pre-rollout
+    #     url: http://flagger-loadtester.ecommerce/
+    #     timeout: 30s
+    #     metadata:
+    #       type: bash
+    #       cmd: "curl http://orders-canary:3003/v1/orders | grep deliveryType"
+{{- end }}
+

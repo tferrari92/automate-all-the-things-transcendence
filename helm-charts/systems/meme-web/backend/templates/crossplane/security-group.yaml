@@ -1,0 +1,111 @@
+
+# Security Group
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroup
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-db-sec-grp
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  forProvider:
+    description: Security group for {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-database
+    name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-db-sec-grp
+    region: {{ .Values.region }}
+    vpcId: {{ .Values.vpcId }} # VPC created by Terraform
+    tags:
+      Name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-db-sec-grp
+  providerConfigRef:
+    name: aws
+
+---
+# Ingress Rule: Allow SSH from EC2 instance
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupIngressRule
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ing-rule-0
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  forProvider:
+    description: Allow SSH from EC2 instance
+    region: {{ .Values.region }}
+    cidrIpv4: 10.0.128.0/19 # CIDR block for public subnet C
+    ipProtocol: tcp
+    fromPort: 22
+    toPort: 22
+    securityGroupIdRef: 
+      name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-db-sec-grp
+    tags:
+      Name: Allow SSH from EC2 instance
+  providerConfigRef:
+    name: aws
+
+
+---
+# Ingress Rule: Allow redis-cli from EC2 instance
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupIngressRule
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ing-rule-1
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  forProvider:
+    description: Allow redis-cli from EC2 instance
+    region: {{ .Values.region }}
+    cidrIpv4: 10.0.128.0/19 # CIDR block for public subnet C
+    ipProtocol: tcp
+    fromPort: 6379
+    toPort: 6379
+    securityGroupIdRef: 
+      name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-db-sec-grp
+    tags:
+      Name: Allow redis-cli from EC2 instance
+  providerConfigRef:
+    name: aws
+
+---
+# Ingress Rule: Allow EKS node 1 to connect to the DB
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupIngressRule
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ing-rule-2
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  forProvider:
+    description: Allow EKS node 1 to connect to the DB
+    region: {{ .Values.region }}
+    cidrIpv4: 10.0.32.0/19  # CIDR block for private subnet A
+    ipProtocol: tcp
+    fromPort: 6379
+    toPort: 6379
+    securityGroupIdRef: 
+      name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-db-sec-grp
+    tags:
+      Name: Allow EKS node 1 to connect to the DB
+  providerConfigRef:
+    name: aws
+
+---
+# Ingress Rule: Allow EKS node 2 to connect to the DB
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupIngressRule
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ing-rule-3
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  forProvider:
+    description: Allow EKS node 2 to connect to the DB
+    region: {{ .Values.region }}
+    cidrIpv4: 10.0.96.0/19  # CIDR block for private subnet B
+    ipProtocol: tcp
+    fromPort: 6379
+    toPort: 6379
+    securityGroupIdRef: 
+      name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-db-sec-grp
+    tags:
+      Name: Allow EKS node 2 to connect to the DB
+  providerConfigRef:
+    name: aws

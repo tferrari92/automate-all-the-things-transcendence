@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ${{ values.system }}-${{ values.name }}-bucket
+  description: ${{ values.name }} bucket for the ${{ values.system }} system
+  tags:
+    - aws 
+    - s3
+spec:
+  type: s3-bucket
+  lifecycle: experimental
+  owner: ${{ values.owner }}
+  system: ${{ values.system }}

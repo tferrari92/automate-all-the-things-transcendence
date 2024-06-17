@@ -1,0 +1,12 @@
+system: ${{ values.system }} 
+
+service: ${{ values.service }} 
+
+deployment:
+  image:
+    repository: AATT_DOCKERHUB_USERNAME/${{ values.system }}-${{ values.service }}
+  labels:
+    system: ${{ values.system }}
+    service: ${{ values.service }}
+    backstage.io/kubernetes-id: ${{ values.system }}-${{ values.service }}
+    istio: monitor

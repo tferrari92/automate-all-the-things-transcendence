@@ -1,0 +1,13 @@
+environment: stage
+
+# redis_host: master.meme-web-backend-stage-ec-rep-grp.shelfr.use1.cache.amazonaws.com
+
+deployment:
+  image:
+    tag: 13
+  replicas: 1
+  labels:
+    full-name: meme-web-backend-stage # This value was modified by the initial-setup python script
+
+secret:
+  redisPass: AgCyd4ycLlUYct7DHmtnsk2ZbFGuSUH2fWaUrC7gTCI+BxL2Bz83rJNzbIwDN7mEijzqez4OMh1lcrI5SSMjOGd3mR4Mlqgk/fSp0gcGh4W+0Zzcc3zhb+wIIUlPNgYGegS9eGLnX+xAek/1wU66K4hL9D1gRtfgXb8yyVIjw6ArjxtMjLKJFKTvvgox7rt2zoLl9tkQHLbv3cnFhSDTcOdzleHcSofY7sBCPL7MFT5GF5CZcj4cEICzRtnHlcZntiTpzeJM/5bLYpSX9ke2XA7EpJyQ1/yWDetKCDBE8A95YIOqOj1tHyImBW8P5JWpj0/5oCqGEZjmju1B9yA3cqr0vnBxTM47lJh9Vird76J/rr+xaspwIEd82JazZeNh3XWdUn+Tr2+qFmJyVyBzIuXD/Gj1n3cabBn7gq6dB/cMRGU3erfsP9QaelRzWto27eILXUKGchERIkDHvAfY6nKUdEl/oYzJ0PJHj1NHEO2vOHmazzuxLY2zsXNe8A/3UapQ0prj1AoeujbaiY0n1WRnsH9hFTQ+1IqTcg6n2tIAfQYtT2Iupy6W60tKNLBN2eC6whFzOKJJUS/pLleBu5nfPY20yS/RvQmM7vWiXp7+D8Ozg1pnv0NRKzyhKYKBrhbG+bQKgdVnXlpXZA0YdGA+Iy1y7Q+RGpZNDNfmhTTF5EX60+8sclGCcej5yYrW/uY= # This value was modified by the sealed-secrets pipeline

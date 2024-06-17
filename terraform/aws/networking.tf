@@ -35,8 +35,8 @@ resource "aws_subnet" "public-subnet-a" {
 
   tags = {
     "Name"                                         = "public-${var.region}-a"
-    "kubernetes.io/role/elb"                       = "1"
-    "kubernetes.io/cluster/${var.project}-cluster" = "owned"
+    "kubernetes.io/role/elb"                       = "1" # Required for EKS
+    "kubernetes.io/cluster/${var.project}-cluster" = "owned" # Required for EKS
   }
 }
 
@@ -47,8 +47,8 @@ resource "aws_subnet" "private-subnet-a" {
 
   tags = {
     "Name"                                         = "private-${var.region}-a"
-    "kubernetes.io/role/internal-elb"              = "1"
-    "kubernetes.io/cluster/${var.project}-cluster" = "owned"
+    "kubernetes.io/role/internal-elb"              = "1" # Required for EKS
+    "kubernetes.io/cluster/${var.project}-cluster" = "owned" # Required for EKS
   }
 }
 
@@ -61,8 +61,8 @@ resource "aws_subnet" "public-subnet-b" {
 
   tags = {
     "Name"                                         = "public-${var.region}-b"
-    "kubernetes.io/role/elb"                       = "1"
-    "kubernetes.io/cluster/${var.project}-cluster" = "owned"
+    "kubernetes.io/role/elb"                       = "1" # Required for EKS
+    "kubernetes.io/cluster/${var.project}-cluster" = "owned" # Required for EKS
   }
 }
 
@@ -73,8 +73,8 @@ resource "aws_subnet" "private-subnet-b" {
 
   tags = {
     "Name"                                         = "private-${var.region}-b"
-    "kubernetes.io/role/internal-elb"              = "1"
-    "kubernetes.io/cluster/${var.project}-cluster" = "owned"
+    "kubernetes.io/role/internal-elb"              = "1" # Required for EKS
+    "kubernetes.io/cluster/${var.project}-cluster" = "owned" # Required for EKS
   }
 }
 

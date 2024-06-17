@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: prueba
+  description: hsdjkfhalsdkjfhasdlkfjhasdlf
+  tags:
+    - hola
+    - chau
+spec:
+  owner: group:default/prueba-team

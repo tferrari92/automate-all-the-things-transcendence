@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: geralt
+spec:
+  profile:
+    displayName: Geralt
+    email: geralt@rivia.com
+    picture: https://i.imgur.com/FRQBE9F.jpg
+  memberOf:
+    - meme-web-frontend-subteam

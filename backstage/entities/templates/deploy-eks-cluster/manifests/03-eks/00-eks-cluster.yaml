@@ -1,0 +1,20 @@
+apiVersion: eks.aws.upbound.io/v1beta1
+kind: Cluster
+metadata:
+  name: ${{ values.system}}-${{ values.name }}-eks-cluster
+spec:
+  forProvider:
+    region: ${{ values.region }}
+    version: "1.29"
+    roleArnRef:
+      name: ${{ values.system}}-${{ values.name }}-eks-controlplane-role
+    vpcConfig:
+      - endpointPublicAccess: true
+        endpointPrivateAccess: false 
+        subnetIdRefs:
+          - name: ${{ values.system}}-${{ values.name }}-private-subnet-b
+          - name: ${{ values.system}}-${{ values.name }}-private-subnet-c
+    tags:
+      Name: ${{ values.system}}-${{ values.name }}-eks-cluster
+  providerConfigRef:
+    name: aws

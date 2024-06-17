@@ -1,0 +1,42 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: meme-web-backend
+  description: meme-web backend service
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/kubernetes-id: meme-web-backend
+    github.com/project-slug: AATT_DOCKERHUB_USERNAME/automate-all-the-things-transcendence
+    argocd/app-selector: system-service=meme-web-backend # This is for Backstage ArgoCD plugin. You need to add this label in the application.yaml. You can also use argocd/app-name
+    grafana/dashboard-selector: "tags @> 'linux'" # The following selector will return dashboards that have a 'linux' tag
+    # grafana/overview-dashboard: 'http://localhost:8082/d/k8s_views_global/kubernetes-views-global' # I couldn't make this work. Got error: Refused to frame 'https://localhost:8082/' because it violates the following Content Security Policy directive: "frame-src 'self' http://localhost:8082".
+  tags:
+    - nodejs
+  links:
+    - title: Documentation
+      url: https://github.com/AATT_DOCKERHUB_USERNAME/automate-all-the-things-transcendence
+      icon: docs
+    - title: Admin Dashboard
+      type: admin-dashboard
+      icon: dashboard
+      url: https://admin.example-org.com
+    - title: Metrics
+      type: metrics-dashboard
+      url: https://grafana.domain.com/
+    - title: Logs
+      type: logs-dashboard  
+      icon: assignment
+      url: https://grafana.domain.com/
+    - title: Helm Chart
+      type: helm-chart 
+      icon: github
+      url: https://github.com/AATT_DOCKERHUB_USERNAME/automate-all-the-things-transcendence/tree/main/helm-charts/systems/meme-web/backend
+spec:
+  type: service
+  lifecycle: production
+  owner: meme-web-backend-subteam
+  system: meme-web
+  dependsOn:
+    - resource:default/meme-web-elasticache
+  providesApis:
+    - meme-web-backend-api

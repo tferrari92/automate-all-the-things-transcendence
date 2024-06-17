@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-deployment
+  labels:
+    {{- range $key, $value := .Values.deployment.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}
+      {{- range $key, $value := .Values.deployment.labels }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}
+        {{- range $key, $value := .Values.deployment.labels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}
+          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+          ports:
+            - containerPort: {{ .Values.port }}
+          env:
+            - name: SERVICE
+              value: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}
+            - name: REDIS_HOST
+              value: master.{{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ec-rep-grp.shelfr.use1.cache.amazonaws.com
+              # value: {{ .Values.redis_host }} 
+            - name: JAEGER_HOST
+              value: jaeger-collector.observability
+            - name: REDIS_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_PASS
+

@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: masterchief
+spec:
+  profile:
+    displayName: Masterchief
+    email: masterchief@eridanus.com
+    picture: https://i.imgur.com/a8eqzkH.jpg
+  memberOf:
+    - meme-web-database-subteam

@@ -1,0 +1,113 @@
+name: meme-web-backend build & deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'application-code/meme-web/backend/**'
+
+env:
+  SYSTEM: meme-web
+  SERVICE: backend
+
+jobs:
+  build-and-push:
+    name: Build & push docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build and push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v4
+        with:
+          image: ${{ secrets.DOCKER_USERNAME }}/${{ env.SYSTEM }}-${{ env.SERVICE }}
+          tag: ${{ github.run_number }}
+          registry: docker.io
+          directory: application-code/${{ env.SYSTEM }}/${{ env.SERVICE }}
+          dockerfile: application-code/${{ env.SYSTEM }}/${{ env.SERVICE }}/Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+
+  deploy-dev:
+    name: Update image tag for DEV environment
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # We update the local repo with a pull just in case there have been any recent modifications
+      - name: Update repo
+        run: git pull
+
+      - name: Update tag in values-dev.yaml
+        run: |
+          sed "s/tag:.*/tag: $GITHUB_RUN_NUMBER/g" helm-charts/systems/$SYSTEM/$SERVICE/environments/values-dev.yaml > helm-charts/systems/$SYSTEM/$SERVICE/environments/values-dev.temp
+          mv helm-charts/systems/$SYSTEM/$SERVICE/environments/values-dev.temp helm-charts/systems/$SYSTEM/$SERVICE/environments/values-dev.yaml
+
+      - name: Commit changes to GitHub
+        run: |
+          git config --global user.email "GitHubActions@Build&Deploy$SERVICEWorkflow.com"
+          git config --global user.name "GitHub Actions - Build & Deploy $SERVICE Workflow"
+          git add helm-charts/systems/$SYSTEM/$SERVICE/environments/values-dev.yaml 
+          git commit -m "$SERVICE image tag updated to $GITHUB_RUN_NUMBER by GitHub Actions"
+          git push
+
+
+  deploy-stage:
+    name: Update image tag for STAGE environment
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # We update the local repo with a pull just in case there have been any recent modifications
+      - name: Update repo
+        run: git pull
+
+      - name: Update tag in values-stage.yaml
+        run: |
+          sed "s/tag:.*/tag: $GITHUB_RUN_NUMBER/g" helm-charts/systems/$SYSTEM/$SERVICE/environments/values-stage.yaml > helm-charts/systems/$SYSTEM/$SERVICE/environments/values-stage.temp
+          mv helm-charts/systems/$SYSTEM/$SERVICE/environments/values-stage.temp helm-charts/systems/$SYSTEM/$SERVICE/environments/values-stage.yaml
+
+      - name: Commit changes to GitHub
+        run: |
+          git config --global user.email "GitHubActions@Build&Deploy$SERVICEWorkflow.com"
+          git config --global user.name "GitHub Actions - Build & Deploy $SERVICE Workflow"
+          git add helm-charts/systems/$SYSTEM/$SERVICE/environments/values-stage.yaml 
+          git commit -m "$SERVICE image tag updated to $GITHUB_RUN_NUMBER by GitHub Actions"
+          git push
+
+
+  deploy-prod:
+    name: Update image tag for PROD environment
+    needs: deploy-stage
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # We update the local repo with a pull just in case there have been any recent modifications
+      - name: Update repo
+        run: git pull
+
+      - name: Update tag in values-prod.yaml
+        run: |
+          sed "s/tag:.*/tag: $GITHUB_RUN_NUMBER/g" helm-charts/systems/$SYSTEM/$SERVICE/environments/values-prod.yaml > helm-charts/systems/$SYSTEM/$SERVICE/environments/values-prod.temp
+          mv helm-charts/systems/$SYSTEM/$SERVICE/environments/values-prod.temp helm-charts/systems/$SYSTEM/$SERVICE/environments/values-prod.yaml
+
+      - name: Commit changes to GitHub
+        run: |
+          git config --global user.email "GitHubActions@Build&Deploy$SERVICEWorkflow.com"
+          git config --global user.name "GitHub Actions - Build & Deploy $SERVICE Workflow"
+          git add helm-charts/systems/$SYSTEM/$SERVICE/environments/values-prod.yaml 
+          git commit -m "$SERVICE image tag updated to $GITHUB_RUN_NUMBER by GitHub Actions"
+          git push
+          
+          
