@@ -3,7 +3,7 @@ kind: Group
 metadata:
   name: meme-web-team
   title: meme-web-team
-  description: responsible for maintaining and developing the meme-web system
+  description: Responsible for maintaining and developing the meme-web system
   tags:
     - engineering
     - infrastructure
