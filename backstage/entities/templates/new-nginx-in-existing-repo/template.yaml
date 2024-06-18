@@ -112,6 +112,9 @@ spec:
         values:
           system: ${{ parameters.system | replace('system:default/', '') }}
           service: ${{ parameters.service }}
+          repoHost: ${{ (parameters.repoUrl | parseRepoUrl).host }}
+          repoOwner: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
+          repoName: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
 
     - id: fetch-github-workflow
       name: Fetch GitHub Workflow

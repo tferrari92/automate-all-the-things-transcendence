@@ -99,9 +99,6 @@ spec:
           system: ${{ parameters.system | replace('system:default/', '') }}
           name: ${{ parameters.name }}
           owner: ${{ parameters.owner | replace('group:default/', '') }}
-          repoHost: ${{ (parameters.repoUrl | parseRepoUrl).host }}
-          repoOwner: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
-          repoName: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
 
     - id: publish
       name: Publish
