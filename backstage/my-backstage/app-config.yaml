@@ -139,7 +139,7 @@ catalog:
 
       # Use this if new services are created in their own repositories
       # catalogsProvider:
-      #   organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+      #   organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
       #   catalogPath: '/catalog-info.yaml' # string
       #   filters:
       #     branch: 'main' # string
@@ -150,7 +150,7 @@ catalog:
 
       # Catalogs
       catalogsProvider:
-        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
         catalogPath: '/application-code/**/*catalog-info.yaml' # this will search all folders for files that end in template.yaml
         filters:
           branch: 'main' # string
@@ -161,7 +161,7 @@ catalog:
 
       # Resources
       resourcesProvider:
-        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
         catalogPath: '/helm-charts/infra/crossplane-managed-resources/**/*catalog-info.yaml' # this will search all folders for files that end in template.yaml
         # catalogPath: '/application-code/**/*catalog-info.yaml' # this will search all folders for files that end in template.yaml
         filters:
@@ -173,7 +173,7 @@ catalog:
 
       # APIs
       apisProvider:
-        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
         catalogPath: '/application-code/**/*api-info.yaml' # this will search all folders for files that end in template.yaml
         filters:
           branch: 'main' # string
@@ -184,7 +184,7 @@ catalog:
 
       # Templates
       templatesProvider:
-        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
         catalogPath: '/backstage/entities/templates/**/*template.yaml' # this will search all folders for files that end in template.yaml
         filters:
           branch: 'main' # string
@@ -195,7 +195,7 @@ catalog:
 
       # Systems
       systemsProvider:
-        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
         catalogPath: '/backstage/entities/systems/**/*.yaml' # this will search all folders for files that end in .yaml
         filters:
           branch: 'main' # string
@@ -206,7 +206,7 @@ catalog:
 
       # Groups
       groupsProvider:
-        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
         catalogPath: '/backstage/entities/groups/**/*.yaml' # this will search all folders for files that end in .yaml
         filters: # optional filters
           branch: 'main' # optional string
@@ -217,7 +217,7 @@ catalog:
 
       # Users
       usersProvider:
-        organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+        organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
         catalogPath: '/backstage/entities/users/**/*.yaml' # this will search all folders for files that end in .yaml
         filters: # optional filters
           branch: 'main' # optional string

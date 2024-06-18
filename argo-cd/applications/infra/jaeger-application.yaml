@@ -17,7 +17,7 @@ spec:
     helm:
       valueFiles:
         - values-custom.yaml
-    repoURL: https://github.com/AATT_DOCKERHUB_USERNAME/automate-all-the-things-transcendence.git # This value was modified by the initial-setup python script
+    repoURL: https://github.com/AATT_GITHUB_USERNAME/automate-all-the-things-transcendence.git # This value was modified by the initial-setup python script
   syncPolicy:
     automated:
       prune: true

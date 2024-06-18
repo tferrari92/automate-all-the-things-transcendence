@@ -54,7 +54,7 @@ backstage:
 
           # Use this if new services are created in their own repositories
           # catalogsProvider:
-          #   organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+          #   organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
           #   catalogPath: '/catalog-info.yaml' # string
           #   filters:
           #     branch: 'main' # string
@@ -64,7 +64,7 @@ backstage:
           #     timeout: { minutes: 3 }
           # Catalogs
           catalogsProvider:
-            organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+            organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
             catalogPath: '/application-code/**/*catalog-info.yaml' # this will search all folders for files that end in template.yaml
             filters:
               branch: 'main' # string
@@ -75,7 +75,7 @@ backstage:
 
           # Resources
           resourcesProvider:
-            organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+            organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
             catalogPath: '/helm-charts/infra/crossplane-managed-resources/**/*catalog-info.yaml' # this will search all folders for files that end in template.yaml
             # catalogPath: '/application-code/**/*catalog-info.yaml' # this will search all folders for files that end in template.yaml
             filters:
@@ -87,7 +87,7 @@ backstage:
 
           # APIs
           apisProvider:
-            organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+            organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
             catalogPath: '/application-code/**/*api-info.yaml' # this will search all folders for files that end in template.yaml
             filters:
               branch: 'main' # string
@@ -98,7 +98,7 @@ backstage:
 
           # Templates
           templatesProvider:
-            organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+            organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
             catalogPath: '/backstage/entities/templates/**/*template.yaml' # this will search all folders for files that end in template.yaml
             filters:
               branch: 'main' # string
@@ -109,7 +109,7 @@ backstage:
 
           # Systems
           systemsProvider:
-            organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+            organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
             catalogPath: '/backstage/entities/systems/**/*.yaml' # this will search all folders for files that end in .yaml
             filters:
               branch: 'main' # string
@@ -120,7 +120,7 @@ backstage:
 
           # Groups
           groupsProvider:
-            organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+            organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
             catalogPath: '/backstage/entities/groups/**/*.yaml' # this will search all folders for files that end in .yaml
             filters: # optional filters
               branch: 'main' # optional string
@@ -131,7 +131,7 @@ backstage:
 
           # Users
           usersProvider:
-            organization: 'AATT_DOCKERHUB_USERNAME' # This value was modified by the initial-setup script
+            organization: 'AATT_GITHUB_USERNAME' # This value was modified by the initial-setup script
             catalogPath: '/backstage/entities/users/**/*.yaml' # this will search all folders for files that end in .yaml
             filters: # optional filters
               branch: 'main' # optional string
@@ -141,12 +141,11 @@ backstage:
               timeout: { minutes: 3 }
 
 
-githubToken: AgB4HwV+uuLBnCi25IUTLkfw4Il/TvqSo0sCrWoRwF3tRPYu0BsHfvQYiOUqh3ouVLQmFlHTqYujhKFbQwVxyw+UfBu+cau6dp1AyTNfEmREnVcI1xefBPG0kYxDEOo318LMEZftWYMLVo8sZP++fP6YHkmlFmiGpkCuOVfELcm2kphzf7+Q3vcQNd9et1Mlr0hOkIIJo3RHPaT/NdmSk9vMXHoCaugyD6EVGfq9GiHvUc/PZnSi6KeOoYQaQKQhlCgzX5Gz2dqmUhD5KOj85KMaLs9Vav8hQ3HOvny758I2hrkBCFT8Cloo3bgM9NCdCVurXpyRMdCgeP6MR1QtPUzuzbkXM7tS/MbWZ567g47tBrLie5bJ6TW2WRWBshJcL3mycF3QfV1WFfKO5UyAK2adaQ+7TWgsOZzNG2EN9NE2OD8oT/XWtRAo4AdMMcAXuauDX3bNpzW/vvTMk99RzQ9EzdvbbBG8BEsYYccQPzPWMEk3D/IzZOepcmp9gtblyPGiVaBCp1pVihzuT9OORon8Wa8cE40iNPKEv6s2+LIi1VLF1QPxRmSF0rmFfd1o/TInQVzDmuYxZCh2Yqj5XLyBLyw73HZoxPbhKztpuGWwMQVDBKl0iN5r9EDhPSvfc/wIvc06ghHTaa3IjY2X3zO7eBA4HsnR3eYwcrd8AJN1kLrChfx9UVGfB2Lyf86PtIqBAII5ZIvS1cF6x4reBDZGmVJBdR6plVdjzXetz1H5auTYalEOw3ZP # This value was modified by the sealed-secrets pipeline
-githubAuthClientId: AgCgBWaLwuXudBQFTjFtJtFxDE1oDrW51U+9f6m28m4c0Sq4OA719/0DOCsbiLvsy66Ay8PaNYnAF6HeqzuQBOxWckSuQVqW4QN7R8ZoA4M4OgC0xnTwfFVHG9FaZZYqsw6SOkv8SSAq/J5c8YLpedsXbZTgZh/2iIBNOQFr0M3/mTzi+MoOM/IZIrNJn4vXHXFmkWoAwBtAtARSbMPMdzWfxKePPgX/Vg8FW0nwy+m8F96gitY0hNfVF85017nGh4ydD3qLrslJvZYA87jvwsPJOZu3BmdwPrTJV4zXbHked1vk6J9aanHES2X0klH4Ue7cbD+PXi5X4SApZWtpO+h8nzC7KKrFeMRqm1I/HYY9BCJoQ2a06Gwp+6MU22dNb9VWDdj8RiQTlCQbWOzC8DnFJY4hDnLXf2qQZsHf+WolEJFx1Bp0+Yo9wjJypKiD0l+YfLCBhlZWpwqnmSKp9XHb8MUoAb9rOJQcZhVxTb3q2/bfj5Sbi13Jlw/vffdgVfEvUK18K0RibsF/7Y/PxoJmwBom3hMtOiVGJXzRvJM5LCQAgrBmMEc6lvY4u2gu0dyzeK1SE/PWMfByjMtl2z4eC7yLUzDdC+2rrgiJlBrignrp52YPCJU7ibStLTgwRlyGiODWvqGlFP5qIxWDGsaMKD9o1o1Dhyw09RobPVYwDeTpl2RXKVWrci4WPmfkrRd6LhM0aT9tliU6WD2VRRWlmo4pWA== # This value was modified by the sealed-secrets pipeline
-githubAuthClientSecret: AgAuDLliBiEt9O3vbw9q6/cN3cK4zq8u2I6NVHZN5R6FOxujOjsjfsgmOCdggZ3osnTeXVjXtpM1Nj3ldzL7FJS7auhK64wONYiaGZ8k9WFSubrrc4Tv63qgNyVrk3/7g/xW4GcuLEeFFToDBkbikRE7J4YHQh+AEjvx8pFBTI5e9d+44480UoZpL6WNn0sd6mTe0hjNq0sZC7Uxq5b0Tv8WKQ/V8OCT98d8BTOyF12xDNYZZexBTnmT6Kjog2sLwGDSuP9VP3X5Zb/2hjxJNMuoHipgeE/PUXCk596qSUSE4YBlqYR92k4JnpPtqlhu4iF6lR3Anr9RseWnjASy9AYvPytwL/TQ027iIADUddElo++oQDUWdAbPhWoHR5Ua1uukiOQSnmQK2RFv+1n2eRJTdZh/yMGbWOuduN8QK/gSlOVXBc9XBycUDO2GmQByXwgVECqnfsKfWgrC+oDbIOFdkgzpghxUAlMxawtjLErM94fpgLoo5KfNLeWYO0snGiCN5/wXPxyutHq736OkBHjzTnjnE19BImU0j1DuKstXfKhf+AnrTqI5Mw8WZSwsyyktHNwaVAnCAonX914nhv6eEVrK1yDpyeJW+J6fvur8Hi9YrK3oPpzHKtz/NDkjDOlCXpKXyDfeE2afB813MHGss75+6tXVwLn1TwQoM0t4BebMekJ0u5gq40JWaD/MtDNZGQOxlpKMWC/2mbi1zjWfAozrY/yHLngNnIPlkFqTdwF0iPSwd3c+ # This value was modified by the sealed-secrets pipeline
+githubToken:  # This value was modified by the sealed-secrets pipeline
+githubAuthClientSecret:  # This value was modified by the sealed-secrets pipeline
 
-argocdAuthToken: AgAto2s0zNLYLdIyeZfFQ5CxH9WajJp2Oc414yf45NYgIyz1I7nxdck33Z1L6hphgwgQozLqbbzEocb34VnJmghBGnMdTOM0a1j6eVdQ8OhWPi2Z1U7ZhU4Be3WSd7KcabQ7eWySWpOaWSwPtRHFuXHeNPOasv/QbVVW9ZvmTFbeAtqcSq+BZbIqhV83SiZPKmxk4ELpfaJMGMj8qHQdLfV0pJW0+4qomDsAPbJJ5j7sEds5pnc9hGAoir5RtXzaMzcOD00sYjHjnJg/ZnYw8TVQRFGU+04kmBaPjks6NWbcml0QXJkp/a3qCBrzIygi1AHhhA7tLGF3V0oezaZXUyB7t0xAefJxnIACGoUr0m8x9a0rMcg5gnz1tzNK+wcxkCZoojCuiOyfBO4kbaoMb/v6fwaWl3YuPVCHtQYDgPncS6/EIqvPdB+OHn629C4OJ6sfotOH8nzYepyb0N9AHeU+aLMURdGqvH2S/ELcLiL+EJ639joYCMTAdG42Aob8H/pR5p61hOfO3uj++rYDfjkgYh5AuCQeGN2Bc7GJSt3vsJsLHB1johRODS6iI2CPb3Y0+O0aziBz8vqf0HkJvdWia/ex7qPRpWZ3Ko9zCpb/XUciFXCOrgPQKQ56KCLvzs1PHwQDf4HsYbIbzWhgZyQZ0tXGZ3rWqN+bmQwZwi9rJ4L7f/I0ec4Oydb5g7n0cFYXvSHFBC32vRnHMBtyl+AKU+KLC4uRXV186ccOPAc2magZSpsUtnXo6lLq/COTxjuQXkYoaZmSpGh/IzuRn1xpgPYqAut/v0ad1XStx+VnYza/Aw/g0BEEqGjbf4/B/ehXK3azqlv6ieWHA1gQ+p2JpwG3GWKsodKzsXRO/kxQQK88mf5fvaTDDYyMdU03eX90Kykr84QlqhbaekReogyheWc+vGJygyIqxVXVlevKDWiAbd5e8EQfv/hq2A6vT4BHQsyt7JfLv4NwxRgC4Wjw6uQ0BIj8OJgJNWPIIkvQ8Oe0tYbclCPfR6tjhv+URcBjZFlD6HZjRhE2oZHh # This value was modified by the sealed-secrets pipeline
-grafanaToken: AgBzE481UrEqTrz5e13XlbhvN9S2GFpjKbd4XqqjHPtOn1xri28V2dykYxjsUvJIWln3f3ANBgMb84GqPCkIKKtiQkJyaP7A4uyiO4cW8azJLCRT9Z7MwQpe+Wqufq6mRphKrFkRSQB9SX+mInBqnfWvyO/zrj4I6D9hr53jnUA5yT4HB6zRmpQzxEnT2H1zcy/bEiqp3hsdUnaUQ36t4iTu070IpN7V1dEP5wvOfQKFEv0VFj8gMCyARf2QYTUNILMZzndMxgl4tSuZgV1vIGfq4bWCaZ6FfiwS+y/3ongevs9Dvdu20nHTKRrNqDa6yoQEm62x/tWFOn7xAW2Us6Fxa/4HKR+QKQ1bYw7ZqqP2LMiNYSEO8nXuRhn/moZFYZcq99xSBmXRu6J349OIIfs2ww49pQ1gx/JkROcrqxr/8oSoNYusIl2rBHd6gu/+TIl/TqY8YdzK4On9WmmC3R17mqgZNlyUEmEhH9sdfo5XaDsUJuZjOFaDHxisMV74rhC/qKAlHud1HhKEXGbn2537d2Wwj40x4s+U+ibw4/+jMPzNqqp5/edxPjr7OyX977cEdvXQZlU/GVuG39t0DH7bgZcSMYu72hRro5WwJ5jbjHZvV3oejd9q6k9C/yimt9NIVQQIt97Prz0qrrR1/Xf7+/m7Kko8kSI1YzSfock388sE058xHEpaebKcokUeEpFKkmJDYD1zuzbO4WXvXZGha3TA93IfyKEhU/0RhPEYH1l1+A+Vjs+HFjLX4/gM # This value was modified by the sealed-secrets pipeline
+argocdAuthToken:  # This value was modified by the sealed-secrets pipeline
+grafanaToken:  # This value was modified by the sealed-secrets pipeline
 
 ingress:
   enabled: true

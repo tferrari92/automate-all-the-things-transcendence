@@ -17,7 +17,7 @@ spec:
     helm:
       valueFiles:
         - environments/values-stage.yaml
-    repoURL: https://github.com/AATT_DOCKERHUB_USERNAME/automate-all-the-things-transcendence.git
+    repoURL: https://github.com/AATT_GITHUB_USERNAME/automate-all-the-things-transcendence.git
   syncPolicy:
     automated:
       prune: true

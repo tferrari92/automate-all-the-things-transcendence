@@ -75,8 +75,7 @@ spec:
             allowedHosts:
               - github.com
             # allowedOrganizations: # This doesn't get displayed as a dropdown list like allowedRepos does, IDK why.
-            #   - AATT_DOCKERHUB_USERNAME
-            #   - AATT_DOCKERHUB_USERNAME
+            #   - AATT_GITHUB_USERNAME
             allowedRepos:
               - automate-all-the-things-braindamage
               - automate-all-the-things-transcendence

@@ -8,14 +8,14 @@ metadata:
   annotations:
     backstage.io/techdocs-ref: dir:.
     backstage.io/kubernetes-id: ${{ values.system }}-${{ values.service }}
-    github.com/project-slug: AATT_DOCKERHUB_USERNAME/automate-all-the-things-transcendence
+    github.com/project-slug: AATT_GITHUB_USERNAME/automate-all-the-things-transcendence
     argocd/app-selector: system-service=${{ values.system }}-${{ values.service }} # This is for Backstage ArgoCD plugin. You need to add this label in the application.yaml. You can also use argocd/app-name
     grafana/dashboard-selector: "tags @> 'linux'" # The following selector will return dashboards that have a 'linux' tag
   tags:
     - nodejs
   links:
     - title: Documentation
-      url: https://github.com/AATT_DOCKERHUB_USERNAME/automate-all-the-things-transcendence
+      url: https://github.com/AATT_GITHUB_USERNAME/automate-all-the-things-transcendence
       icon: docs
     - title: Admin Dashboard
       type: admin-dashboard
@@ -32,7 +32,7 @@ metadata:
     - title: Helm Chart
       type: helm-chart 
       icon: github
-      url: https://github.com/AATT_DOCKERHUB_USERNAME/automate-all-the-things-transcendence/tree/main/helm-charts/systems/${{ values.system }}/${{ values.service }}
+      url: https://github.com/AATT_GITHUB_USERNAME/automate-all-the-things-transcendence/tree/main/helm-charts/systems/${{ values.system }}/${{ values.service }}
 spec:
   type: service
   lifecycle: experimental
