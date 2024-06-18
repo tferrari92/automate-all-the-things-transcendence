@@ -89,6 +89,9 @@ spec:
           service: ${{ parameters.service }}
           description: ${{ parameters.description }}
           owner: ${{ parameters.owner }}
+          repoHost: ${{ (parameters.repoUrl | parseRepoUrl).host }}
+          repoOwner: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
+          repoName: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
 
     - id: fetch-helm-chart
       name: Fetch Helm Chart
