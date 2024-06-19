@@ -29,6 +29,14 @@ spec:
           image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
           ports:
             - containerPort: {{ .Values.port }}
+          # We specify resources now because we are using Horizontal Pod Autoscalers
+          resources:
+            requests:
+              memory: "5Mi"
+              cpu: "50m"
+            limits:
+              memory: "50Mi"
+              cpu: "200m"
           volumeMounts:
             - name: images-configmap
               mountPath: /usr/share/nginx/html/resources

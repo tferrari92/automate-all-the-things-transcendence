@@ -25,6 +25,7 @@
 This Transcendence Edition builds upon the [Braindamage Edition](https://github.com/tferrari92/automate-all-the-things-braindamage).
 
 ### New features:
+- Horizontal Pod Autoscaler & Metrics-Server
 - Crossplane
 - Beefier Backstage deployment with 
   - New plugins:
@@ -690,7 +691,7 @@ Here are the specific numbers:
 ## App of Apps
 - -5 Prometheus / Grafana / Istio Base / Istiod / Sealed-Secrets 
 - -4 Istio Gateway / Jaeger / Loki  
-- -3 Flagger / Crossplane 
+- -3 Flagger / Crossplane / Metrics-Server
 - -2 Kiali / Flagger Load-Tester / Crossplane Providers
 - -1 Backstage / Crossplane ProviderConfigs 
 - 0 Backends / Crossplane Managed Resources
@@ -701,10 +702,12 @@ Here are the specific numbers:
 - -1 SealedSecret
 - 0 Deployment
 - 1 Canary
+- 2 Horizontal Pod Autoscaler
 
 ## Frontend Applications
 - 0 Deployment
 - 1 Canary
+- 2 Horizontal Pod Autoscaler
 
 <br/>
 <br/>
@@ -879,7 +882,6 @@ Special thanks to all these wonderful YouTube people. This wouldn't have been po
 
 [Automate All The Things Nirvana Edition](https://github.com/tferrari92/automate-all-the-things-nirvana):
 
-- We'll start using Horizontal Pod Autoscalers.
 - We'll automate TLS certificates provisioning with Kubernetes Cert Manager.
 - We'll automate DNS records provisioning with Kubernetes External DNS.
 - We'll ditch DockerHub and start using our self-hosted image registry with Harbor.
