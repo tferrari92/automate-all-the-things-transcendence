@@ -31,13 +31,13 @@ spec:
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: RolePolicyAttachment
 metadata:
-  name: amazoneksclusterpolicy-policy-attachment
+  name: aatt-demo-amazoneksclusterpolicy-policy-attachment
 spec:
   forProvider:
     policyArn: arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
     roleRef:
       name: aatt-demo-eks-controlplane-role
     tags:
-      Name: samazoneksclusterpolicy-policy-attachment
+      Name: aatt-demo-amazoneksclusterpolicy-policy-attachment
   providerConfigRef:
     name: aws

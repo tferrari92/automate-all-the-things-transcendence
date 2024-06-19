@@ -30,41 +30,41 @@ spec:
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: RolePolicyAttachment
 metadata:
-  name: amazoneksworkernodepolicy-policy-attachment
+  name: ${{ values.system}}-${{ values.name }}-amazoneksworkernodepolicy-policy-attachment
 spec:
   forProvider:
     policyArn: arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
     roleRef:
       name: ${{ values.system}}-${{ values.name }}-eks-ng-role
     tags:
-      Name: amazoneksworkernodepolicy-policy-attachment
+      Name: ${{ values.system}}-${{ values.name }}-amazoneksworkernodepolicy-policy-attachment
   providerConfigRef:
     name: aws
 ---
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: RolePolicyAttachment
 metadata:
-  name: amazonekscnipolicy-policy-attachment
+  name: ${{ values.system}}-${{ values.name }}-amazonekscnipolicy-policy-attachment
 spec:
   forProvider:
     policyArn: arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
     roleRef:
       name: ${{ values.system}}-${{ values.name }}-eks-ng-role
     tags:
-      Name: amazonekscnipolicy-policy-attachment
+      Name: ${{ values.system}}-${{ values.name }}-amazonekscnipolicy-policy-attachment
   providerConfigRef:
     name: aws
 ---
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: RolePolicyAttachment
 metadata:
-  name: amazonec2containerregistryreadonly-policy-attachment
+  name: ${{ values.system}}-${{ values.name }}-amazonec2containerregistryreadonly-policy-attachment
 spec:
   forProvider:
     policyArn: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
     roleRef:
       name: ${{ values.system}}-${{ values.name }}-eks-ng-role
     tags:
-      Name: amazonec2containerregistryreadonly-policy-attachment
+      Name: ${{ values.system}}-${{ values.name }}-amazonec2containerregistryreadonly-policy-attachment
   providerConfigRef:
     name: aws
