@@ -1,0 +1,55 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroup
+metadata:
+  name: aatt-demo-securitygroup
+spec:
+  forProvider:
+    description: Allow TLS inbound traffic
+    name: aatt-demo-securitygroup
+    region: us-east-1
+    vpcIdRef: 
+      name: aatt-demo-vpc
+    tags:
+      Name: aatt-demo-securitygroup
+  providerConfigRef:
+    name: aws
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupRule
+metadata:
+  name: aatt-demo-securitygrouprule-1
+spec:
+  forProvider:
+    cidrBlocks:
+      - 0.0.0.0/0
+    fromPort: 0
+    protocol: "-1"
+    region: us-east-1
+    securityGroupIdRef:
+      name: aatt-demo-securitygroup
+    toPort: 0
+    type: ingress
+    tags:
+      Name: aatt-demo-securitygrouprule-1
+  providerConfigRef:
+    name: aws
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupRule
+metadata:
+  name: aatt-demo-securitygrouprule-2
+spec:
+  forProvider:
+    cidrBlocks:
+      - 0.0.0.0/0
+    fromPort: 0
+    protocol: "-1"
+    region: us-east-1
+    securityGroupIdRef:
+      name: aatt-demo-securitygroup
+    toPort: 0
+    type: egress
+    tags:
+      Name: aatt-demo-securitygrouprule-2
+  providerConfigRef:
+    name: aws

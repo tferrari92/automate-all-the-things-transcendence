@@ -1,0 +1,30 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTable
+metadata:
+  name: aatt-demo-route-table-private-b
+spec:
+  forProvider:
+    region: us-east-1
+    vpcIdRef: 
+      name: aatt-demo-vpc
+    tags:
+      Name: aatt-demo-route-table-private-b
+  providerConfigRef:
+    name: aws
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Route
+metadata:
+  name: aatt-demo-route-private-b
+spec:
+  forProvider:
+    destinationCidrBlock: 0.0.0.0/0
+    natGatewayIdRef:
+      name: aatt-demo-nat-gw-b
+    region: us-east-1
+    routeTableIdRef:
+      name: aatt-demo-route-table-private-b
+    tags:
+      Name: aatt-demo-route-private-b
+  providerConfigRef:
+    name: aws

@@ -1,0 +1,13 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: InternetGateway
+metadata:
+  name: aatt-demo-internet-gw
+spec:
+  forProvider:
+    region: us-east-1
+    vpcIdRef:
+      name: aatt-demo-vpc
+    tags:
+      Name: aatt-demo-internet-gw
+  providerConfigRef:
+    name: aws

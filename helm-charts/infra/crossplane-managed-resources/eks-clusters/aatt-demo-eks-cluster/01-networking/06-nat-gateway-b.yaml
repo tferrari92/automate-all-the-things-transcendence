@@ -1,0 +1,29 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: NATGateway
+metadata:
+  name: aatt-demo-nat-gw-b
+spec:
+  forProvider:
+    region: us-east-1
+    subnetIdRef: 
+      name: aatt-demo-public-subnet-b
+    allocationIdRef:
+      name: aatt-demo-eip-b
+    tags:
+      Name: aatt-demo-nat-gw-b
+  providerConfigRef:
+    name: aws
+
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: EIP
+metadata:
+  name: aatt-demo-eip-b
+spec:
+  forProvider:
+    region: us-east-1
+    vpc: true
+    tags:
+      Name: aatt-demo-eip-b
+  providerConfigRef:
+    name: aws

@@ -1,13 +1,13 @@
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
-  name: aatt-demo-bucket
-  description: Demo S3 bucket for the aatt system
+  name: aatt-demo-eks-cluster
+  description: Demo EKS cluster for the aatt system
   tags:
     - aws 
-    - s3
+    - eks
 spec:
-  type: s3-bucket
+  type: kubernetes-cluster
   lifecycle: experimental
   owner: aatt-demo-team
   system: aatt-demo-system

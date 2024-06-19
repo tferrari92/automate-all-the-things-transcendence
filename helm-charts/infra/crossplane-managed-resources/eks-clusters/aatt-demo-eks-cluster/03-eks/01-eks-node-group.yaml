@@ -1,0 +1,25 @@
+apiVersion: eks.aws.upbound.io/v1beta1
+kind: NodeGroup
+metadata:
+  name: aatt-demo-eks-ng
+spec:
+  forProvider:
+    clusterNameRef:
+      name: aatt-demo-eks-cluster
+    nodeRoleArnRef:
+      name: aatt-demo-eks-ng-role
+    region: us-east-1
+    scalingConfig:
+      - desiredSize: 1
+        maxSize: 1
+        minSize: 1
+    subnetIdRefs:
+      - name: aatt-demo-private-subnet-b
+      - name: aatt-demo-private-subnet-c
+    instanceTypes:
+      - t3.nano
+    diskSize: 5
+    tags:
+      Name: aatt-demo-eks-ng
+  providerConfigRef:
+    name: aws

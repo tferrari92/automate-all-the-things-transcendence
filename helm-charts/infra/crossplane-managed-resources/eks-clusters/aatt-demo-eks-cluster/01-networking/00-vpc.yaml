@@ -1,0 +1,16 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: VPC
+metadata:
+  name: aatt-demo-vpc
+spec:
+  forProvider:
+    cidrBlock: 10.0.0.0/16
+    enableDnsHostnames: true
+    enableDnsSupport: true
+    region: us-east-1
+    tags:
+      Name: aatt-demo-vpc
+  providerConfigRef:
+    name: aws
+
+

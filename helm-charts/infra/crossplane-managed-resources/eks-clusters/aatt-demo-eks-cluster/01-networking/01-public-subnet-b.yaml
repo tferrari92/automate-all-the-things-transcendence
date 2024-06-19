@@ -1,0 +1,37 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Subnet
+metadata:
+  name: aatt-demo-public-subnet-b
+spec:
+  forProvider:
+    # mapPublicIpOnLaunch: true
+    availabilityZone: us-east-1b
+    cidrBlock: 10.0.0.0/19
+    region: us-east-1
+    vpcIdRef: 
+      name: aatt-demo-vpc
+    tags:
+      Name: aatt-demo-public-subnet-b
+      kubernetes.io/role/internal-elb: "1" # Required for EKS
+      kubernetes.io/cluster/${var.project}-cluster: "owned" # Required for EKS
+  providerConfigRef:
+    name: aws
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTableAssociation
+metadata:
+  name: aatt-demo-rta-public-b
+spec:
+  forProvider:
+    region: us-east-1
+    subnetIdRef:
+      name: aatt-demo-public-subnet-b
+    routeTableIdRef:
+      name: aatt-demo-route-table-public
+    tags:
+      Name: aatt-demo-rta-public-b
+  providerConfigRef:
+    name: aws
+
+
+
