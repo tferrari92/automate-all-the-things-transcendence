@@ -206,17 +206,17 @@ Let's begin...
 
 In order to turn this whole deployment into your own thing, we need to do some initial setup:
 
-1. Fork this repo. Keep the repository name "automate-all-the-things-braindamage".
+1. Fork this repo. Keep the repository name "automate-all-the-things-transcendence".
 1. Clone the repo from your fork:
 
 ```bash
-git clone https://github.com/<your-github-username>/automate-all-the-things-braindamage.git
+git clone https://github.com/<your-github-username>/automate-all-the-things-transcendence.git
 ```
 
 2. Move into the directory:
 
 ```bash
-cd automate-all-the-things-braindamage
+cd automate-all-the-things-transcendence
 ```
 
 2. Run the initial setup script. Come back when you are done:
