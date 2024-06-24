@@ -577,7 +577,7 @@ grafana:
   domain: http://<actual-grafana-url> # Don't use final slash "/"
 ```
 2. When you commit and push, the Backstage workflow will run automatically, we need to wait for the new image to be deployed on EKS. Meanwhile:                 
-3. Modify the values that we set on [this stepa](#set-up-github-oauth) for the GitHub OAuth App for the new URL. They should look something like this:
+3. Modify the values that we set on [this step](#set-up-github-oauth) for the GitHub OAuth App for the new URL. They should look something like this:
 
     Application name: Backstage<br>
     Homepage URL: `http://k8s-backstag-backstag-e78a25dae5-368143972.us-east-1.elb.amazonaws.com/`<br>
