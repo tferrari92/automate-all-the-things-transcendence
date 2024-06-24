@@ -753,7 +753,6 @@ Finally the pipeline will get the ArgoCD web UI URL and admin account password a
 3. Click on "Run workflow" (Use workflow from Branch: main).
 4. When it's finished, the frontend endpoints and ArgoCD access files will be exported as artifacts. You'll find them in the workflow run screen under "Artifacts". Download them to see the ArgoCD URL and credentials, and the frontend endpoints.
 5. You can now access the ArgoCD UI, if it's not ready just hit refresh every few seconds.
-6. Remember to do [this](#once-backstage-is-deployed-on-eks) for Backstage to work properly.
 
 <br/>
 <br/>
@@ -786,7 +785,7 @@ Same will be done for the GitHub token secret that Backstage will use.
 - automate-all-the-things-stage
 - automate-all-the-things-prod
 5. Click on "Run workflow".
-
+6. Remember to do [this](#once-backstage-is-deployed-on-eks) for Backstage to work properly.
 
 <br/>
 <br/>
