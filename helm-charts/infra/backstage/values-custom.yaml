@@ -142,6 +142,7 @@ backstage:
 
 
 githubToken:  # This value was modified by the sealed-secrets pipeline
+githubAuthClientId: # This value was modified by the sealed-secrets pipeline
 githubAuthClientSecret:  # This value was modified by the sealed-secrets pipeline
 
 argocdAuthToken:  # This value was modified by the sealed-secrets pipeline
