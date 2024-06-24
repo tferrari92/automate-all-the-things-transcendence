@@ -2,10 +2,10 @@ name: 02-Deploy ArgoCD
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["01-Deploy AWS infrastructure"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["01-Deploy AWS infrastructure"]
+  #   types:
+  #     - completed
 
 env:
   AWS_REGION: AATT_AWS_REGION # This value was modified by the initial-setup python script
@@ -18,7 +18,7 @@ jobs:
   deploy-argocd:
     runs-on: ubuntu-latest
     # Run only if the previous workflow was successful or if its a manual trigger
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    # if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
     steps:
       - name: Checkout code
