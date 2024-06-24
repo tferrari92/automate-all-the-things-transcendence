@@ -445,6 +445,7 @@ The [Kubernetes plugin](https://backstage.io/docs/features/kubernetes/) in Backs
 
 It will elevate the visibility of errors where identified, and provide drill down about the deployments, pods, and other objects for a service.
 </br>
+</br>
 
 #### - GitHub Discovery plugin 
 The [GitHub Discovery plugin](https://backstage.io/docs/integrations/github/discovery) automatically discovers catalog entities within a GitHub organization. The provider will crawl the GitHub organization and register entities matching the configured path. This can be useful as an alternative to static locations or manually adding things to the catalog. This is the preferred method for ingesting entities into the catalog.
@@ -455,11 +456,13 @@ You can check the automatic discovery configuration under catalog.providers.gith
 
 **IMPORTANT**: We use [app-config.yaml](/backstage/my-backstage/app-config.yaml) for local testing (when running `yarn dev`) and [app-config.production.yaml](/backstage/my-backstage/app-config.production.yaml) when deploying to Minikube.
 </br>
+</br>
 
 #### - GitHub Actions plugin 
 The [GitHub Actions plugin](https://roadie.io/backstage/plugins/github-actions/) actually cames by default, but I added "Recent Workflow Runs" card to the overview tab of Components. All workflows will be mixed up because we are using monorepo. If we had a repo for each service, then this would make a lot more sense. 
 
 For this plugin to work you need to do [this](#once-backstage-is-deployed-on-eks).
+</br>
 </br>
 
 #### - GitHub Insights plugin
@@ -467,9 +470,11 @@ The [GitHub Insights plugin](https://roadie.io/backstage/plugins/github-insights
 
 For this plugin to work you need to do [this](#once-backstage-is-deployed-on-eks).
 </br>
+</br>
 
 #### - ArgoCD plugin
 The [ArgoCD plugin](https://roadie.io/backstage/plugins/argo-cd/) will display (on the Overview tab of each component) the state of all ArgoCD applications related to it.
+</br>
 </br>
 
 #### - Grafana plugin
@@ -484,17 +489,20 @@ Creates a new Backstage System with the provided information. A System in Backst
 
 It generates a Pull Request which includes a new System manifest. When merged, the System catalog entity will be automatically added to the Backstage catalog by the GitHub Discovery plugin.
 </br>
+</br>
 
 #### - New Backstage Group
 Creates a new Backstage group with the provided information. 
 
 It generates a Pull Request which includes a new Group manifest. When merged, the Group catalog entity will be automatically added to the Backstage catalog by the GitHub Discovery plugin.
 </br>
+</br>
 
 #### - New Backstage User
 Creates a new Backstage user with the provided information. 
 
 It generates a Pull Request which includes a new User manifest. When merged, the User catalog entity will be automatically added to the Backstage catalog by the GitHub Discovery plugin.
+</br>
 </br>
 
 #### - New Node.js in existing repo
@@ -506,6 +514,7 @@ Creates all the boilerplate files and directories in an existing repo for deploy
 
 It generates a Pull Request which includes all these files and directories.
 </br>
+</br>
 
 #### - New NGINX in existing repo
 Creates all the boilerplate files and directories in an existing repo for deploying a new NGINX service in Kubernetes:
@@ -516,11 +525,13 @@ Creates all the boilerplate files and directories in an existing repo for deploy
 
 It generates a Pull Request which includes all these files and directories.
 </br>
+</br>
 
 #### - New S3 bucket
 Creates all the manifest for deploying an S3 bucket using Crossplane and saves them in [this directory](/helm-charts/infra/crossplane-managed-resources/). [This ArgoCD application](/argo-cd/applications/infra/crossplane-managed-resources-application.yaml) is monitoring that directory, automatically deploying anything it finds there.
 
 It generates a Pull Request which includes all these files and directories.
+</br>
 </br>
 
 #### - New EKS cluster
