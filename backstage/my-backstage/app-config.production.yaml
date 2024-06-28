@@ -2,14 +2,14 @@ app:
   # Should be the same as backend.baseUrl when using the `app-backend` plugin.
   title: Automate All The Things
   # baseUrl: http://localhost:7007
-  baseUrl: <BACKSTAGE-URL> # Don't use final slash "/".  # This needs to be modified with the actual URL Backstage gets once it's deployed in EKS
+  baseUrl: http://example.com # Don't use final slash "/".  # This needs to be modified with the actual URL Backstage gets once it's deployed in EKS
 
 organization:
   name: Automate All The Things
 
 backend:
 
-  baseUrl: <BACKSTAGE-URL> # Don't use final slash "/".  # This needs to be modified with the actual URL Backstage gets once it's deployed in EKS
+  baseUrl: http://example.com # Don't use final slash "/".  # This needs to be modified with the actual URL Backstage gets once it's deployed in EKS
  
   # This is because when running in K8S, profile images of users don't load. We get error: 
   # Refused to load the image 'https://i.imgur.com/LWGqYi2.jpg' because it violates the following Content Security Policy directive: "img-src 'self' data:".
