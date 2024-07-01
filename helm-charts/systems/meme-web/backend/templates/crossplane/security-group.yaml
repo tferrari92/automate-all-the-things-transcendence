@@ -24,7 +24,7 @@ kind: SecurityGroupIngressRule
 metadata:
   name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ing-rule-0
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   forProvider:
     description: Allow SSH from EC2 instance
@@ -48,7 +48,7 @@ kind: SecurityGroupIngressRule
 metadata:
   name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ing-rule-1
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   forProvider:
     description: Allow redis-cli from EC2 instance
@@ -71,7 +71,7 @@ kind: SecurityGroupIngressRule
 metadata:
   name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ing-rule-2
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   forProvider:
     description: Allow EKS node 1 to connect to the DB
@@ -94,7 +94,7 @@ kind: SecurityGroupIngressRule
 metadata:
   name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ing-rule-3
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   forProvider:
     description: Allow EKS node 2 to connect to the DB
