@@ -47,5 +47,5 @@ spec:
             - name: REDIS_PASS
               valueFrom:
                 secretKeyRef:
-                  name: redis-secret
+                  name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-redis-secret
                   key: REDIS_PASS
