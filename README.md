@@ -710,7 +710,6 @@ Here are the specific numbers:
 
 ## Backend Applications
 - -2 Crossplane AWS SecurityGroup / Crossplane AWS SubnetGroup / Crossplane AWS ReplicationGroup
-- -1 SealedSecret
 - 0 Deployment
 - 1 Canary
 - 2 Horizontal Pod Autoscaler
