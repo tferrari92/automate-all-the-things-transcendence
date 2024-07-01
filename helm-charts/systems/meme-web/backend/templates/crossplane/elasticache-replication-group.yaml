@@ -3,7 +3,7 @@ kind: ReplicationGroup
 metadata:
   name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ec-rep-grp
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   forProvider:
     automaticFailoverEnabled: true
