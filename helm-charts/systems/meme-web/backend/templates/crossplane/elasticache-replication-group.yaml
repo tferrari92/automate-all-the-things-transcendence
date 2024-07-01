@@ -1,4 +1,4 @@
-apiVersion: elasticache.aws.upbound.io/v1beta1
+apiVersion: elasticache.aws.upbound.io/v1beta2
 kind: ReplicationGroup
 metadata:
   name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ec-rep-grp
@@ -17,9 +17,10 @@ spec:
     subnetGroupNameRef:
       name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-elasticache-subnet-group
     transitEncryptionEnabled: true
+    autoGenerateAuthToken: true
     authTokenSecretRef:
       namespace: {{ .Values.system }}-{{ .Values.environment }}
-      name: redis-secret 
+      name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-redis-secret
       key: REDIS_PASS
     tags:
       Name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-ec-rep-grp
