@@ -5,7 +5,7 @@ kind: SecurityGroup
 metadata:
   name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-db-sec-grp
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   forProvider:
     description: Security group for {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-database
