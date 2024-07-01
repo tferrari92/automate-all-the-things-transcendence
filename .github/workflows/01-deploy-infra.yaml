@@ -83,9 +83,9 @@ jobs:
       - name: Modify values
         if: ${{ always() }}
         run: |
-          sed -i "s/vpcId:.*/vpcId: $(cat vps_id.txt | tr -d '\n')/g" helm-charts/systems/$SYSTEM/backend/values.yaml
-          sed -i "s/subnetId:.*/subnetId: $(cat database_subnet_id.txt | tr -d '\n')/g" helm-charts/systems/$SYSTEM/backend/values.yaml
-          # sed -i "s/securityGroupId:.*/securityGroupId: $(cat database_security_group_id.txt | tr -d '\n')/g" helm-charts/systems/$SYSTEM/backend/values.yaml
+          sed -i "s/vpcId:.*/vpcId: $(cat vps_id.txt | tr -d '\n') # This value was modified by the deploy-infra pipeline/g" helm-charts/systems/$SYSTEM/backend/values.yaml
+          sed -i "s/subnetId:.*/subnetId: $(cat database_subnet_id.txt | tr -d '\n') # This value was modified by the deploy-infra pipeline/g" helm-charts/systems/$SYSTEM/backend/values.yaml
+          # sed -i "s/securityGroupId:.*/securityGroupId: $(cat database_security_group_id.txt | tr -d '\n') # This value was modified by the deploy-infra pipeline/g" helm-charts/systems/$SYSTEM/backend/values.yaml
 
       # - name: Commit changes to GitHub
       #   if: ${{ always() }}
