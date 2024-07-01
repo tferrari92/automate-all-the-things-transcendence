@@ -17,7 +17,7 @@ We created 4 separate ArgoCD applications:
 3. [provider-configs application](/argo-cd/applications/infra/crossplane-provider-configs-application.yaml)
 4. [managed-resources application](/argo-cd/applications/infra/crossplane-managed-resources-application.yaml)
 
-We usually us this finalizer on applications:
+We usually use this finalizer on applications:
 ```yaml
  finalizers:
     - resources-finalizer.argocd.argoproj.io 
