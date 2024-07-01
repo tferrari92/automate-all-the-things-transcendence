@@ -3,7 +3,7 @@ kind: SubnetGroup
 metadata:
   name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}-elasticache-subnet-group
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   forProvider:
     region: {{ .Values.region }}
