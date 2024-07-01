@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: provider-aws-elasticache
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-elasticache:v1.4.0
+  package: xpkg.upbound.io/upbound/provider-aws-elasticache:v1.8.0
