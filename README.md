@@ -709,7 +709,7 @@ Here are the specific numbers:
 - 1 Frontends
 
 ## Backend Applications
-- -2 Crossplane AWS SecurityGroup / Crossplane AWS SubnetGroup / Crossplane AWS ReplicationGroup
+- -1 Crossplane AWS SecurityGroup / Crossplane AWS SubnetGroup / Crossplane AWS ReplicationGroup
 - 0 Deployment
 - 1 Canary
 - 2 Horizontal Pod Autoscaler
