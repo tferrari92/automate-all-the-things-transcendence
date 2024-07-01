@@ -12,5 +12,5 @@ spec:
     kind: Deployment
     # We have no canary in dev environment, so if the env is dev, the value of name will be <my-app-name>-backend-stage-deployment, else it will be <my-app-name>-backend-stage-deployment-primary
     name: {{ .Values.system }}-{{ .Values.service }}-{{ .Values.environment }}{{ if eq .Values.environment "dev" }}-deployment{{ else }}-deployment-primary{{ end }}
-  targetCPUUtilizationPercentage: 80
+  targetCPUUtilizationPercentage: 90
   # targetCPUUtilizationPercentage: 1 # Uncomment this and comment the line above to test the Horizontal Pod Autoscaler
