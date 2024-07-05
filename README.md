@@ -45,8 +45,8 @@ This Transcendence Edition builds upon the [Braindamage Edition](https://github.
 4. [Overload Edition](https://github.com/tferrari92/automate-all-the-things-overload)
 5. [Braindamage Edition](https://github.com/tferrari92/automate-all-the-things-braindamage)
 6. [Transcendence Edition](https://github.com/tferrari92/automate-all-the-things-transcendence) 
-7. [Nirvana Edition](https://github.com/tferrari92/automate-all-the-things-nirvana)
-8. [Almighty Edition](https://github.com/tferrari92/automate-all-the-things-almighty)
+<!-- 7. [Nirvana Edition](https://github.com/tferrari92/automate-all-the-things-nirvana)
+8. [Almighty Edition](https://github.com/tferrari92/automate-all-the-things-almighty) -->
 
 ### Spin-offs:
 - [Backstage Minikube Lab](https://github.com/tferrari92/backstage-minikube-lab)
@@ -891,6 +891,4 @@ Special thanks to all these wonderful YouTube people. This wouldn't have been po
 
 [Automate All The Things Nirvana Edition](https://github.com/tferrari92/automate-all-the-things-nirvana):
 
-- We'll automate TLS certificates provisioning with Kubernetes Cert Manager.
-- We'll automate DNS records provisioning with Kubernetes External DNS.
-- We'll ditch DockerHub and start using our self-hosted image registry with Harbor.
+- We'll REALLY use Crossplane
